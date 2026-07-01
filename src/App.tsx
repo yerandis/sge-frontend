@@ -1,9 +1,13 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-
-// Por ahora solo una página de placeholder
-// Iremos completando esto en los próximos módulos
+import { useEffect } from 'react';
+import { getEmployees } from './services/employeeService';
 
 function App() {
+  useEffect(() => {
+    getEmployees({ page: 0, size: 5, sortBy: 'lastName', sortDir: 'asc' })
+      .then(data => console.log('✅ Servicio funcionando:', data))
+      .catch(err => console.error('❌ Error:', err));
+  }, []);
   return (
     <BrowserRouter>
       <Routes>
