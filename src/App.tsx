@@ -1,19 +1,57 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { useEffect } from 'react';
-import { getEmployees } from './services/employeeService';
+import MainLayout from './components/layout/MainLayout';
 
+/**
+ * Importaciones lazy: los componentes se cargan solo cuando el usuario
+ * navega a esa ruta. Mejora el tiempo de carga inicial.
+ *
+ * React.lazy + Suspense = code splitting automático con Vite.
+ *
+ * Por ahora las importamos de forma normal para simplificar.
+ * Cuando existan las páginas reales, las cambiaremos por lazy imports.
+ */
+import DashboardPage from './pages/Dashboard/DashboardPage';
+import EmployeesPage from './pages/Employees/EmployeesPage';
+import EmployeeNewPage from './pages/EmployeeNew/EmployeeNewPage';
+import EmployeeEditPage from './pages/EmployeeEdit/EmployeeEditPage';
+import EmployeeDetailPage from './pages/EmployeeDetail/EmployeeDetailPage';
+
+/**
+ * App.tsx: define la estructura de rutas de toda la aplicación.
+ *
+ * BrowserRouter: usa la History API del navegador.
+ * La URL cambia sin recargar la página (eso es una SPA).
+ *
+ * Estructura de rutas anidadas:
+ * / → redirige a /dashboard
+ * /dashboard → DashboardPage (dentro del MainLayout)
+ * /employees → EmployeesPage (dentro del MainLayout)
+ * /employees/new → EmployeeNewPage (dentro del MainLayout)
+ * /employees/:id → EmployeeDetailPage (dentro del MainLayout)
+ * /employees/:id/edit → EmployeeEditPage (dentro del MainLayout)
+ *
+ * Route path="/" con element={<MainLayout />} hace que el layout
+ * sea compartido por todas las rutas hijas. Sin esta anidación,
+ * tendríamos que renderizar el sidebar en cada página.
+ */
 function App() {
-  useEffect(() => {
-    getEmployees({ page: 0, size: 5, sortBy: 'lastName', sortDir: 'asc' })
-      .then(data => console.log('✅ Servicio funcionando:', data))
-      .catch(err => console.error('❌ Error:', err));
-  }, []);
   return (
     <BrowserRouter>
       <Routes>
+        {/* Ruta raíz: redirige a /dashboard */}
         <Route path="/" element={<Navigate to="/dashboard" replace />} />
-        <Route path="/dashboard" element={<div>Dashboard - Próximamente</div>} />
-        <Route path="/employees" element={<div>Empleados - Próximamente</div>} />
+
+        {/* Rutas que comparten el MainLayout */}
+        <Route element={<MainLayout />}>
+          <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/employees" element={<EmployeesPage />} />
+          <Route path="/employees/new" element={<EmployeeNewPage />} />
+          <Route path="/employees/:id" element={<EmployeeDetailPage />} />
+          <Route path="/employees/:id/edit" element={<EmployeeEditPage />} />
+        </Route>
+
+        {/* Ruta catch-all: redirige a /dashboard si la URL no existe */}
+        <Route path="*" element={<Navigate to="/dashboard" replace />} />
       </Routes>
     </BrowserRouter>
   );
