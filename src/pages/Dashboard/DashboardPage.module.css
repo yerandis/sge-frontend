@@ -1,0 +1,242 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+}
+
+/* ─── CABECERA DE PÁGINA ──────────────────────────────────────── */
+.pageHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.pageTitle {
+  font-size: 1.375rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  letter-spacing: -0.025em;
+  line-height: 1.2;
+}
+
+.pageSubtitle {
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+  margin-top: 0.25rem;
+}
+
+.refreshBtn {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 0.875rem;
+  border: 1px solid var(--color-border);
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-secondary);
+  border-radius: var(--radius-md);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.refreshBtn:hover:not(:disabled) {
+  background-color: var(--color-bg-tertiary);
+  color: var(--color-text-primary);
+}
+
+.refreshBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.refreshIcon {
+  width: 0.9375rem;
+  height: 0.9375rem;
+}
+
+/* ─── GRID DE TARJETAS ────────────────────────────────────────── */
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+/* ─── TARJETA DE ESTADÍSTICA ──────────────────────────────────── */
+.card {
+  background-color: var(--color-bg-primary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  transition: box-shadow 0.15s, transform 0.15s;
+  position: relative;
+  overflow: hidden;
+}
+
+.card::before {
+  /* Barra de color en el top de la tarjeta */
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background-color: var(--card-accent, var(--color-primary));
+}
+
+.card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.cardLabel {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.cardIcon {
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--card-icon-bg, var(--color-primary-light));
+  color: var(--card-accent, var(--color-primary));
+}
+
+.cardIcon svg {
+  width: 1.125rem;
+  height: 1.125rem;
+}
+
+.cardValue {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+.cardFooter {
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--color-border);
+}
+
+/* Skeleton de carga */
+.skeleton {
+  background: linear-gradient(90deg, var(--color-bg-tertiary) 25%, var(--color-border) 50%, var(--color-bg-tertiary) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: var(--radius-sm);
+}
+
+.skeletonValue {
+  height: 2rem;
+  width: 4rem;
+}
+
+.skeletonLabel {
+  height: 0.75rem;
+  width: 7rem;
+}
+
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ─── SECCIÓN DE RESUMEN ──────────────────────────────────────── */
+.section {
+  background-color: var(--color-bg-primary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.sectionHeader {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sectionTitle {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.sectionLink {
+  font-size: 0.8125rem;
+  color: var(--color-primary);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.sectionLink:hover {
+  text-decoration: underline;
+}
+
+.sectionBody {
+  padding: 1.25rem 1.5rem;
+}
+
+/* Barra de progreso activos/inactivos */
+.progressLabel {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8125rem;
+  color: var(--color-text-secondary);
+  margin-bottom: 0.5rem;
+}
+
+.progressBar {
+  height: 0.5rem;
+  background-color: var(--color-bg-tertiary);
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  background-color: var(--color-success);
+  border-radius: 9999px;
+  transition: width 0.5s ease;
+}
+
+/* Error */
+.errorBox {
+  background-color: var(--color-danger-light);
+  border: 1px solid #fca5a5;
+  border-radius: var(--radius-md);
+  padding: 1rem 1.25rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  color: var(--color-danger);
+  font-size: 0.875rem;
+}
+
+.errorIcon {
+  width: 1.125rem;
+  height: 1.125rem;
+  flex-shrink: 0;
+  margin-top: 0.0625rem;
+}
