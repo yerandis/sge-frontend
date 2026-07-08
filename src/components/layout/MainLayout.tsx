@@ -28,6 +28,7 @@ const Icons = {
 
 /**
  * Definición de los items del menú lateral.
+ * dashboard, employees, new wmployees
  * Agregar un nuevo item de navegación = agregar un objeto a este array.
  * No hace falta tocar el JSX del componente.
  */
