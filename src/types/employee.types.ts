@@ -4,6 +4,8 @@
 // que devuelve el backend (EmployeeResponse.java, etc.)
 // ═══════════════════════════════════════════════════════════════
 
+import type { ZodUUID } from "zod";
+
 /**
  * Los dos posibles estados de un empleado.
  * Coincide con el enum EmployeeStatus.java del backend.
@@ -33,7 +35,7 @@ export interface Department {
  *  El backend ya hace el join.
  */
 export interface Employee {
-  id: number;
+  id: ZodUUID;
   firstName: string;
   lastName: string;
   email: string;

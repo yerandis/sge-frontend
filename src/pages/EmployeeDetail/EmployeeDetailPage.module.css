@@ -1,0 +1,109 @@
+.page { max-width: 56rem; }
+
+.pageHeader {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.75rem;
+  flex-wrap: wrap;
+}
+
+.backBtn {
+  display: flex; align-items: center; justify-content: center;
+  width: 2.25rem; height: 2.25rem;
+  border: 1px solid var(--color-border);
+  background-color: var(--color-bg-primary);
+  border-radius: var(--radius-md);
+  color: var(--color-text-secondary);
+  cursor: pointer; text-decoration: none;
+  transition: all 0.15s; flex-shrink: 0;
+}
+.backBtn:hover { background-color: var(--color-bg-tertiary); color: var(--color-text-primary); }
+.backBtn svg { width: 1.125rem; height: 1.125rem; }
+
+.headerInfo { flex: 1; }
+.pageTitle { font-size: 1.25rem; font-weight: 700; color: var(--color-text-primary); }
+.pageSubtitle { font-size: 0.875rem; color: var(--color-text-secondary); margin-top: 0.125rem; }
+
+.headerActions { display: flex; gap: 0.625rem; margin-left: auto; }
+
+.btnEdit {
+  display: inline-flex; align-items: center; gap: 0.375rem;
+  padding: 0.5rem 0.875rem;
+  border: 1px solid var(--color-border);
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  border-radius: var(--radius-md);
+  font-size: 0.875rem; font-weight: 500;
+  text-decoration: none; cursor: pointer; transition: all 0.15s;
+}
+.btnEdit:hover { background-color: var(--color-bg-tertiary); }
+.btnEdit svg { width: 0.9375rem; height: 0.9375rem; }
+
+/* Tarjeta de perfil */
+.profileCard {
+  background-color: var(--color-bg-primary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 1.75rem;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.avatar {
+  width: 4.5rem; height: 4.5rem; border-radius: 50%;
+  background-color: var(--color-primary);
+  color: #ffffff;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.5rem; font-weight: 700; flex-shrink: 0;
+}
+
+.profileName { font-size: 1.25rem; font-weight: 700; color: var(--color-text-primary); line-height: 1.2; }
+.profilePosition { font-size: 0.9375rem; color: var(--color-text-secondary); margin-top: 0.25rem; }
+.profileBadge { margin-top: 0.625rem; }
+
+/* Cuadrícula de datos */
+.detailCard {
+  background-color: var(--color-bg-primary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+
+.detailHeader {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--color-border);
+  font-size: 0.875rem; font-weight: 600; color: var(--color-text-primary);
+}
+
+.detailGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+}
+
+.detailItem {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--color-border);
+  border-right: 1px solid var(--color-border);
+}
+.detailItem:nth-child(even) { border-right: none; }
+.detailItem:nth-last-child(-n+2) { border-bottom: none; }
+
+.detailLabel {
+  font-size: 0.75rem; font-weight: 500;
+  text-transform: uppercase; letter-spacing: 0.05em;
+  color: var(--color-text-secondary);
+  margin-bottom: 0.375rem;
+}
+
+.detailValue {
+  font-size: 0.9375rem; color: var(--color-text-primary); font-weight: 500;
+}
+
+.detailValueMuted { color: var(--color-text-secondary); font-weight: 400; }
+
+.salaryValue { font-size: 1.125rem; font-weight: 700; color: var(--color-primary); }

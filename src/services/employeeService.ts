@@ -7,6 +7,7 @@ import type {
   ApiResponse,
   DashboardStats,
 } from '../types/employee.types';
+import type { ZodUUID } from 'zod';
 
 /**
  * Capa de servicios: toda la comunicación con la API de empleados.
@@ -66,7 +67,10 @@ export async function getEmployees(filters: EmployeeFilters
 /**
  * Obtener un empleado por ID.
  */
-export async function getEmployeeById(id: number): Promise<Employee> {
+export async function getEmployeeById(id: ZodUUID): Promise<Employee> {
+  //  bucar como convertir el id: string en id: UUID para poder enviarlo a la api
+  const uuid: ZodUUID = id;  
+  console.log({uuid, id}); 
   const response = await apiClient.get<ApiResponse<Employee>>(`/employees/${id}`);
   return response.data.data;
 }
@@ -83,7 +87,7 @@ export async function createEmployee(data: EmployeeFormData): Promise<Employee> 
 /**
  * Actualizar un empleado existente.
  */
-export async function updateEmployee(id: number, data: EmployeeFormData): Promise<Employee> {
+export async function updateEmployee(id: ZodUUID, data: EmployeeFormData): Promise<Employee> {
   const response = await apiClient.put<ApiResponse<Employee>>(
     `/employees/${id}`,
     data
@@ -95,7 +99,7 @@ export async function updateEmployee(id: number, data: EmployeeFormData): Promis
  * Eliminar un empleado.
  * El backend devuelve 204 No Content (sin body).
  */
-export async function deleteEmployee(id: number): Promise<void> {
+export async function deleteEmployee(id: ZodUUID): Promise<void> {
   await apiClient.delete(`/employees/${id}`);
 }
 

@@ -119,7 +119,7 @@ export default function MainLayout() {
 
         {/* Header */}
         <header className={styles.header}>
-          <span className={styles.headerTitle}>{getPageTitle()}</span>
+          {/* <span className={styles.headerTitle}>{getPageTitle()}</span> */}
           <div className={styles.headerRight}>
             <span className={styles.headerBadge}>Admin</span>
           </div>
