@@ -131,7 +131,7 @@ export default function EmployeesPage() {
     const val = e.target.value;
     setFilters(prev => ({
       ...prev,
-      departmentId: val === '' ? '' : Number(val),
+      departmentId: val === '' ? '' : val,
       page: 0,
     }));
   }

@@ -4,8 +4,6 @@
 // que devuelve el backend (EmployeeResponse.java, etc.)
 // ═══════════════════════════════════════════════════════════════
 
-import type { ZodUUID } from "zod";
-
 /**
  * Los dos posibles estados de un empleado.
  * Coincide con el enum EmployeeStatus.java del backend.
@@ -22,7 +20,7 @@ export type EmployeeStatus = 'ACTIVE' | 'INACTIVE';
  * En TypeScript moderno simplemente llamamos al tipo por lo que es: Department.
  */
 export interface Department {
-  id: number;
+  id: string;
   name: string;
   description: string | null;
 }
@@ -35,7 +33,7 @@ export interface Department {
  *  El backend ya hace el join.
  */
 export interface Employee {
-  id: ZodUUID;
+  id: string;
   firstName: string;
   lastName: string;
   email: string;
@@ -109,7 +107,7 @@ export interface ApiResponse<T> {
 export interface EmployeeFilters {
   search?: string;
   status?: EmployeeStatus | '';
-  departmentId?: number | '';
+  departmentId?: string | '';
   page: number;
   size: number;
   sortBy: string;

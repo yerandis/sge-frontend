@@ -6,13 +6,10 @@ import type { Employee, Department, EmployeeFormData, ValidationErrors } from '.
 import EmployeeForm from '../../components/employees/EmployeeForm/EmployeeForm';
 import Spinner from '../../components/ui/Spinner/Spinner';
 import styles from '../../components/employees/EmployeeForm/EmployeeForm.module.css';
-import type { ZodUUID } from 'zod';
 
 export default function EmployeeEditPage() {
   const { id } = useParams<{ id: string }>();   // extrae el :id de la URL
   const navigate = useNavigate();
-
-  const uuid: ZodUUID = id;
 
   const [employee,       setEmployee]       = useState<Employee | null>(null);
   const [departments,    setDepartments]    = useState<Department[]>([]);
@@ -30,7 +27,7 @@ export default function EmployeeEditPage() {
   useEffect(() => {
     if (!id) return;
 
-    const employeeId = uuid; //Number(id);
+    const employeeId = id;
 
     Promise.all([
       getEmployeeById(employeeId),
@@ -55,7 +52,7 @@ export default function EmployeeEditPage() {
     setSuccessMessage(null);
 
     try {
-      const updated = await updateEmployee(/*Number(id)*/ uuid, data);
+      const updated = await updateEmployee(id, data);
       setEmployee(updated); // actualiza los datos del formulario
       setSuccessMessage('¡Empleado actualizado exitosamente!');
 

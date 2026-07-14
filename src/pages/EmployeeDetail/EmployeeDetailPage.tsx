@@ -7,15 +7,11 @@ import Spinner from '../../components/ui/Spinner/Spinner';
 import ConfirmModal from '../../components/ui/ConfirmModal/ConfirmModal';
 import { formatCurrency, formatDate, formatDateTime, getInitials } from '../../utils/formatters';
 import styles from './EmployeeDetailPage.module.css';
-import type { ZodUUID } from 'zod';
 
 export default function EmployeeDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
-  const uuid: ZodUUID = id;
-
-  console.log('detail paige id = ' + id)
 
   const [employee,      setEmployee]    = useState<Employee | null>(null);
   const [isLoading,     setIsLoading]   = useState(true);
@@ -24,7 +20,7 @@ export default function EmployeeDetailPage() {
 
   useEffect(() => {
     if (!id) return;
-    getEmployeeById(uuid)
+    getEmployeeById(id)
       .then(setEmployee)
       .catch(() => setError('Empleado no encontrado o eliminado.'))
       .finally(() => setIsLoading(false));
