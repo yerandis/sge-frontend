@@ -1,16 +1,17 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { getEmployees, deleteEmployee } from '../../services/employeeService';
-import * as departmentService from '../../services/departmentService';
-import { getDepartments } from '../../services/departmentService';
-import type { Employee, EmployeeFilters, Department } from '../../types/employee.types';
-import Badge from '../../components/ui/Badge/Badge';
-import Spinner from '../../components/ui/Spinner/Spinner';
-import EmptyState from '../../components/ui/EmptyState/EmptyState';
-import ConfirmModal from '../../components/ui/ConfirmModal/ConfirmModal';
-import Pagination from '../../components/ui/Pagination/Pagination';
-import { formatCurrency, getInitials, formatDate } from '../../utils/formatters';
+import { getEmployees, deleteEmployee } from '../../../services/employeeService';
+import * as departmentService from '../../../services/departmentService';
+import { getDepartments } from '../../../services/departmentService';
+import type { Employee, EmployeeFilters } from '../../../types/employee.types';
+import Badge from '../../../components/ui/Badge/Badge';
+import Spinner from '../../../components/ui/Spinner/Spinner';
+import EmptyState from '../../../components/ui/EmptyState/EmptyState';
+import ConfirmModal from '../../../components/ui/ConfirmModal/ConfirmModal';
+import Pagination from '../../../components/ui/Pagination/Pagination';
+import { formatCurrency, getInitials, formatDate } from '../../../utils/formatters';
 import styles from './EmployeesPage.module.css';
+import type { Department } from '../../../types/department.types';
 
 // ─── Valores iniciales de los filtros ────────────────────────────
 const DEFAULT_FILTERS: EmployeeFilters = {

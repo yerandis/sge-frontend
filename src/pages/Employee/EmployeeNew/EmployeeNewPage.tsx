@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { createEmployee } from '../../services/employeeService';
-import { getDepartments } from '../../services/departmentService';
-import type { Department, EmployeeFormData, ValidationErrors } from '../../types/employee.types';
-import EmployeeForm from '../../components/employees/EmployeeForm/EmployeeForm';
+import { createEmployee } from '../../../services/employeeService';
+import { getDepartments } from '../../../services/departmentService';
+import type { EmployeeFormData, ValidationErrors } from '../../../types/employee.types';
+import EmployeeForm from '../../../components/employees/EmployeeForm/EmployeeForm';
 import { useEffect } from 'react';
-import styles from '../../components/employees/EmployeeForm/EmployeeForm.module.css';
+import styles from '../../../components/employees/EmployeeForm/EmployeeForm.module.css';
+import type { Department } from '../../../types/department.types';
 
 export default function EmployeeNewPage() {
   const navigate = useNavigate();
@@ -18,7 +19,7 @@ export default function EmployeeNewPage() {
   const [errorMessage, setErrorMessage]     = useState<string | null>(null);
 
   useEffect(() => {
-    getDepartments()
+    getDepartments(null)
       .then(data => setDepartments(data))
       .catch(() => setErrorMessage('No se pudieron cargar los departamentos.'))
       .finally(() => setIsLoadingDepts(false));

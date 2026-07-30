@@ -4,6 +4,8 @@
 // que devuelve el backend (EmployeeResponse.java, etc.)
 // ═══════════════════════════════════════════════════════════════
 
+import type { Department } from "./department.types";
+
 /**
  * Los dos posibles estados de un empleado.
  * Coincide con el enum EmployeeStatus.java del backend.
@@ -11,19 +13,6 @@
  * 'ACTIVE' | 'INACTIVE' significa: solo puede ser uno de estos dos valores.
  */
 export type EmployeeStatus = 'ACTIVE' | 'INACTIVE';
-
-/**
- * Representa un departamento tal como lo devuelve la API.
- * Coincide con DepartmentResponse.java del backend.
- *
- * La 'I' de prefijo (IDepartment) es un estilo antiguo de Java/C#.
- * En TypeScript moderno simplemente llamamos al tipo por lo que es: Department.
- */
-export interface Department {
-  id: string;
-  name: string;
-  description: string | null;
-}
 
 /**
  * Representa un empleado tal como lo devuelve la API.
@@ -60,7 +49,7 @@ export interface EmployeeFormData {
   email: string;
   phone: string;
   position: string;
-  departmentId: number | '';   // '' para el estado inicial del select vacío
+  departmentId: string | '';   // '' para el estado inicial del select vacío
   salary: number | '';         // '' para el estado inicial del input vacío
   status: EmployeeStatus | '';
   hireDate: string;

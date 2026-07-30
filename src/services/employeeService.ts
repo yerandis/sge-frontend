@@ -36,7 +36,7 @@ function buildParams(filters: EmployeeFilters): Record<string, string | number> 
   if (filters.search && filters.search.trim() !== '') {
     params.search = filters.search.trim();
   }
-  if (filters.status && filters.status !== '') {
+  if (filters.status && filters.status.trim() !== '') {
     params.status = filters.status;
   }
   if (filters.departmentId && filters.departmentId !== '') {

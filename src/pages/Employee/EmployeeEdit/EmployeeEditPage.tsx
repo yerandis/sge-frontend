@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
-import { getEmployeeById, updateEmployee } from '../../services/employeeService';
-import { getDepartments } from '../../services/departmentService';
-import type { Employee, Department, EmployeeFormData, ValidationErrors } from '../../types/employee.types';
-import EmployeeForm from '../../components/employees/EmployeeForm/EmployeeForm';
-import Spinner from '../../components/ui/Spinner/Spinner';
-import styles from '../../components/employees/EmployeeForm/EmployeeForm.module.css';
+import { getEmployeeById, updateEmployee } from '../../../services/employeeService';
+import { getDepartments } from '../../../services/departmentService';
+import type { Employee, EmployeeFormData, ValidationErrors } from '../../../types/employee.types';
+import EmployeeForm from '../../../components/employees/EmployeeForm/EmployeeForm';
+import Spinner from '../../../components/ui/Spinner/Spinner';
+import styles from '../../../components/employees/EmployeeForm/EmployeeForm.module.css';
+import type { Department } from '../../../types/department.types';
 
 export default function EmployeeEditPage() {
   const { id } = useParams<{ id: string }>();   // extrae el :id de la URL
@@ -31,7 +32,7 @@ export default function EmployeeEditPage() {
 
     Promise.all([
       getEmployeeById(employeeId),
-      getDepartments(),
+      getDepartments(null),
     ])
       .then(([emp, depts]) => {
         setEmployee(emp);

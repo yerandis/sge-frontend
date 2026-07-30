@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { getEmployeeById, deleteEmployee } from '../../services/employeeService';
-import type { Employee } from '../../types/employee.types';
-import Badge from '../../components/ui/Badge/Badge';
-import Spinner from '../../components/ui/Spinner/Spinner';
-import ConfirmModal from '../../components/ui/ConfirmModal/ConfirmModal';
-import { formatCurrency, formatDate, formatDateTime, getInitials } from '../../utils/formatters';
+import { getEmployeeById, deleteEmployee } from '../../../services/employeeService';
+import type { Employee } from '../../../types/employee.types';
+import Badge from '../../../components/ui/Badge/Badge';
+import Spinner from '../../../components/ui/Spinner/Spinner';
+import ConfirmModal from '../../../components/ui/ConfirmModal/ConfirmModal';
+import { formatCurrency, formatDate, formatDateTime, getInitials } from '../../../utils/formatters';
 import styles from './EmployeeDetailPage.module.css';
 
 export default function EmployeeDetailPage() {

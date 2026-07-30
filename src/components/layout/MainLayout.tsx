@@ -1,5 +1,8 @@
 import { NavLink, Outlet, useLocation } from 'react-router-dom';
 import styles from './MainLayout.module.css';
+import { useAuth } from '../../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
+
 
 /**
  * Iconos inline como SVG.
@@ -19,6 +22,12 @@ const Icons = {
         d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
     </svg>
   ),
+   departments: (
+    <svg className={styles.navIcon} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+      <path strokeLinecap="round" strokeLinejoin="round"
+        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+    </svg>
+  ),
   add: (
     <svg className={styles.navIcon} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
       <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
@@ -33,9 +42,10 @@ const Icons = {
  * No hace falta tocar el JSX del componente.
  */
 const NAV_ITEMS = [
-  { to: '/dashboard', label: 'Dashboard', icon: Icons.dashboard },
-  { to: '/employees', label: 'Empleados', icon: Icons.employees },
-  { to: '/employees/new', label: 'Nuevo Empleado', icon: Icons.add },
+  { to: '/dashboard',     label: 'Dashboard',       icon: Icons.dashboard },
+  { to: '/employees',     label: 'Empleados',       icon: Icons.employees },
+  // { to: '/employees/new', label: 'Nuevo Empleado',  icon: Icons.add },
+  { to: '/departments',   label: 'Departamentos',   icon: Icons.departments },
 ];
 
 /**
@@ -51,6 +61,14 @@ const NAV_ITEMS = [
  */
 export default function MainLayout() {
   const location = useLocation();
+
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  async function handleLogout() {
+    await logout();
+    navigate('/login');
+  }
 
   /**
    * Deriva el título de la página activa desde la URL.
@@ -110,8 +128,23 @@ export default function MainLayout() {
 
         {/* Footer del sidebar */}
         <div className={styles.sidebarFooter}>
-          v1.0.0 — Desarrollo
-        </div>
+  <div style={{ marginBottom: '0.5rem', color: '#94a3b8', fontSize: '0.8125rem' }}>
+    {user?.username} · {user?.role}
+  </div>
+  <button
+    onClick={handleLogout}
+    style={{
+      background: 'none', border: '1px solid rgba(255,255,255,0.15)',
+      color: '#94a3b8', borderRadius: '0.375rem', padding: '0.375rem 0.75rem',
+      fontSize: '0.75rem', cursor: 'pointer', width: '100%',
+      transition: 'all 0.15s',
+    }}
+    onMouseOver={e => (e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.07)')}
+    onMouseOut={e => (e.currentTarget.style.backgroundColor = 'transparent')}
+  >
+    Cerrar sesión
+  </button>
+</div>
       </aside>
 
       {/* ── ÁREA PRINCIPAL ──────────────────────────────────── */}
