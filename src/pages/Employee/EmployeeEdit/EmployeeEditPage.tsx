@@ -6,7 +6,16 @@ import type { Employee, EmployeeFormData, ValidationErrors } from '../../../type
 import EmployeeForm from '../../../components/employees/EmployeeForm/EmployeeForm';
 import Spinner from '../../../components/ui/Spinner/Spinner';
 import styles from '../../../components/employees/EmployeeForm/EmployeeForm.module.css';
-import type { Department } from '../../../types/department.types';
+import type { Department, DepartmentFilter } from '../../../types/department.types';
+
+  const DEFAULT_FILTERS_DEPARTMENT: DepartmentFilter = {
+    search: '',
+    name: '',
+    page: 0,
+    size: 10,
+    sortBy: '',
+    sortDir: 'asc',
+  }
 
 export default function EmployeeEditPage() {
   const { id } = useParams<{ id: string }>();   // extrae el :id de la URL
@@ -32,11 +41,11 @@ export default function EmployeeEditPage() {
 
     Promise.all([
       getEmployeeById(employeeId),
-      getDepartments(null),
+      getDepartments(DEFAULT_FILTERS_DEPARTMENT),
     ])
       .then(([emp, depts]) => {
         setEmployee(emp);
-        setDepartments(depts);
+        setDepartments(depts.content);
       })
       .catch(() => {
         setErrorMessage('No se pudo cargar la información del empleado.');
@@ -61,6 +70,7 @@ export default function EmployeeEditPage() {
         navigate(`/employees/${id}`);
       }, 1500);
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       const response = err.response?.data;
 

@@ -28,7 +28,7 @@ function buildParams(filters: DepartmentFilter | null): Record<string, string | 
 
   //  --- ENDPOINTS --- 
 
-export async function getDepartments(filters: DepartmentFilter | null): Promise<PageResponse<Department>> {
+export async function getDepartments(filters: DepartmentFilter): Promise<PageResponse<Department>> {
   const params = buildParams(filters);
   const response = await apiClient.get<ApiResponse<PageResponse<Department>>>('/departments', {params});
   return response.data.data;

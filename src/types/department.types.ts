@@ -15,7 +15,7 @@ export interface Department {
 
 export interface DepartmentFormData {
     name: string;
-    description: string|'';
+    description: string | '' | null;
 }
 
 export interface DepartmentFilter {

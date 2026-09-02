@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import type { Employee, EmployeeFormData, Department, ValidationErrors } from '../../../types/employee.types';
+import type { Employee, EmployeeFormData, ValidationErrors } from '../../../types/employee.types';
 import Spinner from '../../ui/Spinner/Spinner';
 import styles from './EmployeeForm.module.css';
+import type { Department } from '../../../types/department.types';
 
 interface EmployeeFormProps {
   /** Si se pasa, el formulario está en modo edición y carga estos datos */

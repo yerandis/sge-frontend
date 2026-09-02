@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { getEmployees, deleteEmployee } from '../../../services/employeeService';
-import * as departmentService from '../../../services/departmentService';
 import { getDepartments } from '../../../services/departmentService';
 import type { Employee, EmployeeFilters } from '../../../types/employee.types';
 import Badge from '../../../components/ui/Badge/Badge';
@@ -11,7 +10,7 @@ import ConfirmModal from '../../../components/ui/ConfirmModal/ConfirmModal';
 import Pagination from '../../../components/ui/Pagination/Pagination';
 import { formatCurrency, getInitials, formatDate } from '../../../utils/formatters';
 import styles from './EmployeesPage.module.css';
-import type { Department } from '../../../types/department.types';
+import type { Department, DepartmentFilter } from '../../../types/department.types';
 
 // ─── Valores iniciales de los filtros ────────────────────────────
 const DEFAULT_FILTERS: EmployeeFilters = {
@@ -20,9 +19,18 @@ const DEFAULT_FILTERS: EmployeeFilters = {
   departmentId: '',
   page: 0,
   size: 10,
-  sortBy: 'lastName',
+  sortBy: 'firstName',
   sortDir: 'asc',
 };
+
+const DEFAULT_FILTERS_DEPARTMENT: DepartmentFilter = {
+  search: '',
+  name: '',
+  page: 0,
+  size: 10,
+  sortBy: '',
+  sortDir: 'asc',
+}
 
 export default function EmployeesPage() {
   const navigate = useNavigate();
@@ -60,8 +68,19 @@ export default function EmployeesPage() {
   // EFECTO: cargar departamentos UNA SOLA VEZ al montar
   // ─────────────────────────────────────────────────────────────
  useEffect(() => {
-  getDepartments().then(setDepartments).catch(console.error);
+  loadDeprtments()
 }, []);
+
+  async function loadDeprtments() {
+    try {
+      const page = getDepartments(DEFAULT_FILTERS_DEPARTMENT);
+      setDepartments((await page).content);
+
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
 
   // ─────────────────────────────────────────────────────────────
   // EFECTO: debounce de búsqueda
@@ -174,6 +193,7 @@ export default function EmployeesPage() {
     } catch (err) {
       setDeleteModal(prev => ({ ...prev, isLoading: false }));
       alert('Error al eliminar el empleado. Inténtalo de nuevo.');
+      console.error(err);
     }
   }
 

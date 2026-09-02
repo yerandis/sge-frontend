@@ -193,10 +193,18 @@ import EmployeeEditPage from './pages/Employee/EmployeeEdit/EmployeeEditPage';
 import EmployeeDetailPage from './pages/Employee/EmployeeDetail/EmployeeDetailPage';
 import DepartmentPage from './pages/Department/Departments/DepartmentsPage';
 import DepartmentDetailPage from './pages/Department/DepartmentDetail/DepartmentDetailPage';
+import DepartmentEditPage from './pages/Department/DepartmentEdit/DepartmentEditPage';
+import DepartmentForm from './components/departments/DepartmentForm';
+import DepartmentNewPage from './pages/Department/DepartmentNew/DepartmentNewPage';
+
+import NotificationToast from './components/notifications/NotificationToast';
+import NotificationPanel from './components/notifications/NotificationPanel';
 
 export default function App() {
   return (
     <BrowserRouter>
+        <NotificationToast />
+        <NotificationPanel />
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/" element={<Navigate to="/dashboard" replace />} />
@@ -213,6 +221,8 @@ export default function App() {
             {/* Departments */}
             <Route path="/departments" element={<DepartmentPage/>} />
             <Route path="/departments/:id" element={<DepartmentDetailPage />} />
+            <Route path="/departments/new" element={<DepartmentNewPage />} />
+            <Route path="/departments/:id/edit" element={<DepartmentEditPage />} />
           </Route>
         </Route>
 

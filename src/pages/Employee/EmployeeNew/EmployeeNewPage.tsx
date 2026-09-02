@@ -6,7 +6,16 @@ import type { EmployeeFormData, ValidationErrors } from '../../../types/employee
 import EmployeeForm from '../../../components/employees/EmployeeForm/EmployeeForm';
 import { useEffect } from 'react';
 import styles from '../../../components/employees/EmployeeForm/EmployeeForm.module.css';
-import type { Department } from '../../../types/department.types';
+import type { Department, DepartmentFilter } from '../../../types/department.types';
+
+  const DEFAULT_FILTERS_DEPARTMENT: DepartmentFilter = {
+    search: '',
+    name: '',
+    page: 0,
+    size: 10,
+    sortBy: '',
+    sortDir: 'asc',
+  }
 
 export default function EmployeeNewPage() {
   const navigate = useNavigate();
@@ -19,8 +28,8 @@ export default function EmployeeNewPage() {
   const [errorMessage, setErrorMessage]     = useState<string | null>(null);
 
   useEffect(() => {
-    getDepartments(null)
-      .then(data => setDepartments(data))
+    getDepartments(DEFAULT_FILTERS_DEPARTMENT)
+      .then(data => setDepartments(data.content))
       .catch(() => setErrorMessage('No se pudieron cargar los departamentos.'))
       .finally(() => setIsLoadingDepts(false));
   }, []);
@@ -40,6 +49,7 @@ export default function EmployeeNewPage() {
         navigate(`/employees/${created.id}`);
       }, 1500);
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       const response = err.response?.data;
 

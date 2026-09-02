@@ -2,6 +2,7 @@ import { NavLink, Outlet, useLocation } from 'react-router-dom';
 import styles from './MainLayout.module.css';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import NotificationBell from '../notifications/NotificationBell';
 
 
 /**
@@ -128,23 +129,23 @@ export default function MainLayout() {
 
         {/* Footer del sidebar */}
         <div className={styles.sidebarFooter}>
-  <div style={{ marginBottom: '0.5rem', color: '#94a3b8', fontSize: '0.8125rem' }}>
-    {user?.username} · {user?.role}
-  </div>
-  <button
-    onClick={handleLogout}
-    style={{
-      background: 'none', border: '1px solid rgba(255,255,255,0.15)',
-      color: '#94a3b8', borderRadius: '0.375rem', padding: '0.375rem 0.75rem',
-      fontSize: '0.75rem', cursor: 'pointer', width: '100%',
-      transition: 'all 0.15s',
-    }}
-    onMouseOver={e => (e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.07)')}
-    onMouseOut={e => (e.currentTarget.style.backgroundColor = 'transparent')}
-  >
-    Cerrar sesión
-  </button>
-</div>
+        <div style={{ marginBottom: '0.5rem', color: '#94a3b8', fontSize: '0.8125rem' }}>
+          {user?.username} · {user?.role}
+        </div>
+        <button
+          onClick={handleLogout}
+          style={{
+            background: 'none', border: '1px solid rgba(255,255,255,0.15)',
+            color: '#94a3b8', borderRadius: '0.375rem', padding: '0.375rem 0.75rem',
+            fontSize: '0.75rem', cursor: 'pointer', width: '100%',
+            transition: 'all 0.15s',
+          }}
+          onMouseOver={e => (e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.07)')}
+          onMouseOut={e => (e.currentTarget.style.backgroundColor = 'transparent')}
+        >
+          Cerrar sesión
+        </button>
+        </div>
       </aside>
 
       {/* ── ÁREA PRINCIPAL ──────────────────────────────────── */}
@@ -155,6 +156,7 @@ export default function MainLayout() {
           {/* <span className={styles.headerTitle}>{getPageTitle()}</span> */}
           <div className={styles.headerRight}>
             <span className={styles.headerBadge}>Admin</span>
+            <NotificationBell />
           </div>
         </header>
 
