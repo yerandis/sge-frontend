@@ -3,6 +3,7 @@ import { useNavigate, Navigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import Spinner from '../../components/ui/Spinner/Spinner';
 import styles from './LoginPage.module.css';
+import PasswordStrengthBar from '../../components/ui/PasswordStrengthBar/PasswordStrengthBar';
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -89,6 +90,7 @@ export default function LoginPage() {
               placeholder="••••••••"
               autoComplete="current-password"
             />
+            <PasswordStrengthBar password={password} />
           </div>
 
           <button type="submit" className={styles.submitBtn} disabled={isLoading}>
