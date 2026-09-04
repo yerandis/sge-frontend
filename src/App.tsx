@@ -194,8 +194,8 @@ import EmployeeDetailPage from './pages/Employee/EmployeeDetail/EmployeeDetailPa
 import DepartmentPage from './pages/Department/Departments/DepartmentsPage';
 import DepartmentDetailPage from './pages/Department/DepartmentDetail/DepartmentDetailPage';
 import DepartmentEditPage from './pages/Department/DepartmentEdit/DepartmentEditPage';
-import DepartmentForm from './components/departments/DepartmentForm';
 import DepartmentNewPage from './pages/Department/DepartmentNew/DepartmentNewPage';
+import RolesPage from './pages/Roles/RolesPage';
 
 import NotificationToast from './components/notifications/NotificationToast';
 import NotificationPanel from './components/notifications/NotificationPanel';
@@ -211,6 +211,7 @@ export default function App() {
 
         {/* Rutas protegidas */}
         <Route element={<ProtectedRoute />}>
+        
           <Route element={<MainLayout />}>
             <Route path="/dashboard" element={<DashboardPage />} />
             {/* Employees */}
@@ -223,6 +224,10 @@ export default function App() {
             <Route path="/departments/:id" element={<DepartmentDetailPage />} />
             <Route path="/departments/new" element={<DepartmentNewPage />} />
             <Route path="/departments/:id/edit" element={<DepartmentEditPage />} />
+            {/* Roles */}
+            {/* <Route element={<PermissionRoute permission="ROLE_READ" />}> */}
+              <Route path="/roles" element={<RolesPage />} />
+            {/* </Route> */}
           </Route>
         </Route>
 
