@@ -1,0 +1,53 @@
+/* ─── BREADCRUMB ──────────────────────────────────────────────── */
+.nav {
+  padding: 0.5rem 0;
+  margin-bottom: 0.25rem;
+}
+
+.list {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+
+.link {
+  font-size: 0.8125rem;
+  color: var(--color-primary);
+  text-decoration: none;
+  font-weight: 500;
+  padding: 0.125rem 0.25rem;
+  border-radius: var(--radius-sm);
+  transition: background-color 0.15s, color 0.15s;
+  white-space: nowrap;
+}
+
+.link:hover {
+  background-color: var(--color-primary-light);
+  color: var(--color-primary-dark);
+}
+
+.current {
+  font-size: 0.8125rem;
+  color: var(--color-text-secondary);
+  font-weight: 400;
+  padding: 0.125rem 0.25rem;
+  white-space: nowrap;
+  /* El elemento actual no es clickeable y tiene menor prominencia visual */
+}
+
+.separator {
+  font-size: 0.75rem;
+  color: var(--color-text-disabled);
+  margin: 0 0.125rem;
+  user-select: none;
+}

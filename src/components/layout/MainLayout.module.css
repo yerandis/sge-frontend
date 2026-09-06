@@ -157,3 +157,23 @@
   flex: 1;
   padding: 1.75rem;
 }
+
+
+.themeBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border: 1px solid var(--color-border);
+  background-color: var(--color-bg-primary);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  color: var(--color-text-secondary);
+  transition: all 0.15s;
+}
+
+.themeBtn:hover {
+  background-color: var(--color-bg-tertiary);
+  color: var(--color-text-primary);
+}

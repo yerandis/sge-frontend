@@ -3,7 +3,9 @@ import styles from './MainLayout.module.css';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import NotificationBell from '../notifications/NotificationBell';
-import { useTheme } from '../../context/ThemeContext';
+import { useTheme } from '../../hooks/useTheme';
+import { useBreadcrumb } from '../../hooks/useBreadcrumb';
+import Breadcrumb from '../ui/Breadcrumb/Breadcrumb';
 
 
 /**
@@ -74,7 +76,9 @@ export default function MainLayout() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
 
-  // const { toggleTheme, isDark } = useTheme();
+  const { toggleTheme, isDark } = useTheme();
+  const breadcrumbItems = useBreadcrumb(); // sin nombre de entidad (para el layout general)
+
 
   async function handleLogout() {
     await logout();
@@ -140,7 +144,7 @@ export default function MainLayout() {
         {/* Footer del sidebar */}
         <div className={styles.sidebarFooter}>
         <div style={{ marginBottom: '0.5rem', color: '#94a3b8', fontSize: '0.8125rem' }}>
-          {user?.username} · {user?.role}
+          {user?.username} · {user?.roles}
         </div>
         <button
           onClick={handleLogout}
@@ -164,10 +168,36 @@ export default function MainLayout() {
         {/* Header */}
         <header className={styles.header}>
           {/* <span className={styles.headerTitle}>{getPageTitle()}</span> */}
+          {breadcrumbItems.length > 1 && (
+            <div style={{ padding: '0.5rem 1.75rem 0', borderBottom: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg-primary)' }}>
+              <Breadcrumb items={breadcrumbItems} />
+            </div>
+          )}
+          
           <div className={styles.headerRight}>
             <span className={styles.headerBadge}>Admin</span>
             <NotificationBell />
-           {/* aqui va el btn del icono del tema */}
+           <button
+              onClick={toggleTheme}
+              className={styles.themeBtn}
+              title={isDark ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
+            >
+              {isDark ? (
+                // Icono Sol (modo claro)
+                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
+                    style={{ width: '1.125rem', height: '1.125rem' }}>
+                  <path strokeLinecap="round" strokeLinejoin="round"
+                    d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
+                </svg>
+              ) : (
+                // Icono Luna (modo oscuro)
+                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
+                    style={{ width: '1.125rem', height: '1.125rem' }}>
+                  <path strokeLinecap="round" strokeLinejoin="round"
+                    d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" />
+                </svg>
+              )}
+            </button>
           </div>
         </header>
 

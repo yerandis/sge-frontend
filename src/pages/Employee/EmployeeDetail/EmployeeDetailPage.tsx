@@ -7,8 +7,8 @@ import Spinner from '../../../components/ui/Spinner/Spinner';
 import ConfirmModal from '../../../components/ui/ConfirmModal/ConfirmModal';
 import { formatCurrency, formatDate, formatDateTime, getInitials } from '../../../utils/formatters';
 import styles from './EmployeeDetailPage.module.css';
-// import Breadcrumb from '../../../components/ui/Breadcrumb/Breadcrumb';
-// import { useBreadcrumb } from '../../../hooks/useBreadcrumb';
+import Breadcrumb from '../../../components/ui/Breadcrumb/Breadcrumb';
+import { useBreadcrumb } from '../../../hooks/useBreadcrumb';
 
 export default function EmployeeDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -19,9 +19,9 @@ export default function EmployeeDetailPage() {
   const [error,         setError]       = useState<string | null>(null);
   const [deleteModal,   setDeleteModal] = useState({ isOpen: false, isLoading: false });
 
-// const breadcrumb = useBreadcrumb(
-//   employee ? `${employee.firstName} ${employee.lastName}` : undefined
-// );
+const breadcrumb = useBreadcrumb(
+  employee ? `${employee.firstName} ${employee.lastName}` : undefined
+);
 
   useEffect(() => {
     if (!id) return;
@@ -55,7 +55,7 @@ export default function EmployeeDetailPage() {
 
   return (
     <div className={styles.page}>
-      {/* <Breadcrumb items={breadcrumb} /> */}
+      <Breadcrumb items={breadcrumb} />
 
       {/* ── CABECERA ──────────────────────────────────────── */}
       <div className={styles.pageHeader}>
