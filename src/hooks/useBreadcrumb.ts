@@ -18,17 +18,19 @@ export function useBreadcrumb(entityName?: string): BreadcrumbItem[] {
   return useMemo(() => {
     const base: BreadcrumbItem = { label: 'Inicio', path: '/dashboard' };
     const path = location.pathname;
-    //  --- Inicio  ---
+    //  -------------- Inicio  ----------------
     if (path === '/dashboard') {
       return [{ label: 'Inicio' }];
     }
-    //  --- Empleados   ---
+    //  --------------------- Empleados   --------------------------
     if (path === '/employees') {
       return [base, { label: 'Empleados' }];
     }
 
     if (path === '/employees/new') {
-      return [base, { label: 'Empleados', path: '/employees' }, { label: 'Nuevo empleado' }];
+      return [base, 
+        { label: 'Empleados', path: '/employees' }, 
+        { label: entityName ?? 'Nuevo empleado' }];
     }
 
     if (id && path === `/employees/${id}`) {
@@ -47,13 +49,15 @@ export function useBreadcrumb(entityName?: string): BreadcrumbItem[] {
         { label: 'Editar' },
       ];
     }
-    //  --- Departamentos   ---
+    //  --------------------- Departamentos   --------------------------
     if (path === '/departments') {
       return [base, { label: 'Departamentos' }];
     }
 
     if (path === '/departments/new') {
-      return [base, { label: 'Departamentos', path: '/departments' }, { label: 'Nuevo departamento' }];
+      return [base, 
+        { label: 'Departamentos', path: '/departments' }, 
+        { label: entityName ?? 'Nuevo departamento' }];
     }
 
     if (id && path === `/departments/${id}`) {
@@ -73,7 +77,7 @@ export function useBreadcrumb(entityName?: string): BreadcrumbItem[] {
       ];
     }
 
-    //  --- Roles   ---
+    //  --------------------- Roles   --------------------------
 
     return [base];
   }, [location.pathname, id, entityName]);

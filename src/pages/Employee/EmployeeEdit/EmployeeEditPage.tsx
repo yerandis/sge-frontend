@@ -7,6 +7,8 @@ import EmployeeForm from '../../../components/employees/EmployeeForm/EmployeeFor
 import Spinner from '../../../components/ui/Spinner/Spinner';
 import styles from '../../../components/employees/EmployeeForm/EmployeeForm.module.css';
 import type { Department, DepartmentFilter } from '../../../types/department.types';
+import { useBreadcrumb } from '../../../hooks/useBreadcrumb';
+import Breadcrumb from '../../../components/ui/Breadcrumb/Breadcrumb';
 
   const DEFAULT_FILTERS_DEPARTMENT: DepartmentFilter = {
     search: '',
@@ -28,6 +30,10 @@ export default function EmployeeEditPage() {
   const [serverErrors,   setServerErrors]   = useState<ValidationErrors>({});
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [errorMessage,   setErrorMessage]   = useState<string | null>(null);
+
+  const breadcrumb = useBreadcrumb(
+    employee ? `${employee.firstName} ${employee.lastName}` : undefined
+  );
 
   /**
    * Carga paralela: el empleado y los departamentos se cargan al mismo tiempo.
@@ -93,6 +99,7 @@ export default function EmployeeEditPage() {
 
   return (
     <div className={styles.page}>
+      <Breadcrumb items={breadcrumb} />
       <div className={styles.pageHeader}>
         <Link to={`/employees/${id}`} className={styles.backBtn} title="Volver al detalle">
           <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>

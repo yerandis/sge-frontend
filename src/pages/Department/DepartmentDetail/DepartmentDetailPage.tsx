@@ -6,6 +6,8 @@ import Spinner from "../../../components/ui/Spinner/Spinner";
 import styles from './DepartmentDetailPage.module.css';
 import { getInitials } from "../../../utils/formatters";
 import ConfirmModal from "../../../components/ui/ConfirmModal/ConfirmModal";
+import { useBreadcrumb } from "../../../hooks/useBreadcrumb";
+import Breadcrumb from "../../../components/ui/Breadcrumb/Breadcrumb";
 
 export default function DepartmentDetailPage() {
     const {id} = useParams<{id: string}> ();
@@ -15,6 +17,8 @@ export default function DepartmentDetailPage() {
     const [isLoading,     setIsLoading]   = useState(true);
     const [error,         setError]       = useState<string | null>(null);
     const [deleteModal,   setDeleteModal] = useState({ isOpen: false, isLoading: false });
+
+    const breadcrumb = useBreadcrumb( department ? `${department.name}` : undefined);
 
   useEffect(() => {
     if (!id) return;
@@ -48,6 +52,7 @@ export default function DepartmentDetailPage() {
 
   return (
     <div className={styles.page}>
+      <Breadcrumb items={breadcrumb} />
 
       {/* ── CABECERA ──────────────────────────────────────── */}
       <div className={styles.pageHeader}>

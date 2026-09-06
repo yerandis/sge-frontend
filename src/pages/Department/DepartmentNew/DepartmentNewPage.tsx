@@ -5,6 +5,8 @@ import type { ValidationErrors } from "../../../types/employee.types";
 import { createDepartment } from "../../../services/departmentService";
 import styles from '../../../components/departments/DepartmentForm.module.css';
 import DepartmentForm from "../../../components/departments/DepartmentForm";
+import Breadcrumb from "../../../components/ui/Breadcrumb/Breadcrumb";
+import { useBreadcrumb } from "../../../hooks/useBreadcrumb";
 
 export default function DepartmentNewPage() {
   const navigate = useNavigate();
@@ -14,6 +16,7 @@ export default function DepartmentNewPage() {
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage]     = useState<string | null>(null);
 
+  const breadcrumb = useBreadcrumb('Nuevo Departamento');
 
   async function handleSubmit(data: DepartmentFormData) {
     setIsSubmitting(true);
@@ -30,6 +33,7 @@ export default function DepartmentNewPage() {
         navigate(`/departments/${created.id}`);
       }, 1500);
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       const response = err.response?.data;
 
@@ -49,6 +53,7 @@ export default function DepartmentNewPage() {
 
   return (
     <div className={styles.page}>
+      <Breadcrumb items={breadcrumb}/>
       {/* Cabecera */}
       <div className={styles.pageHeader}>
         <Link to="/departments" className={styles.backBtn} title="Volver a la lista">
@@ -68,7 +73,7 @@ export default function DepartmentNewPage() {
         successMessage={successMessage}
         errorMessage={errorMessage}
         onSubmit={handleSubmit}
-        cancelTo="/employees"
+        cancelTo="/departments"
       />
     </div>
   );

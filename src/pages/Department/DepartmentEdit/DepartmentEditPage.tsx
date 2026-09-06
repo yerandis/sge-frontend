@@ -6,6 +6,8 @@ import { getDepartmentById, updateDepartment } from "../../../services/departmen
 import Spinner from "../../../components/ui/Spinner/Spinner";
 import styles from "../../../components/departments/DepartmentForm.module.css";
 import DepartmentForm from "../../../components/departments/DepartmentForm";
+import Breadcrumb from "../../../components/ui/Breadcrumb/Breadcrumb";
+import { useBreadcrumb } from "../../../hooks/useBreadcrumb";
 
 export default function DepartmentEditPage() {
   const { id } = useParams<{ id: string }>();   // extrae el :id de la URL
@@ -17,6 +19,8 @@ export default function DepartmentEditPage() {
   const [serverErrors,   setServerErrors]   = useState<ValidationErrors>({});
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [errorMessage,   setErrorMessage]   = useState<string | null>(null);
+
+const breadcrumb = useBreadcrumb(department ? `${department.name} ` : undefined);
 
   /**
    * Carga paralela: el empleado y los departamentos se cargan al mismo tiempo.
@@ -57,6 +61,7 @@ export default function DepartmentEditPage() {
         navigate(`/departments/${id}`);
       }, 1500);
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       const response = err.response?.data;
 
@@ -79,6 +84,7 @@ export default function DepartmentEditPage() {
 
   return (
     <div className={styles.page}>
+      <Breadcrumb items={breadcrumb} />
       <div className={styles.pageHeader}>
         <Link to={`/departments/${id}`} className={styles.backBtn} title="Volver al detalle">
           <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>

@@ -168,11 +168,11 @@ export default function MainLayout() {
         {/* Header */}
         <header className={styles.header}>
           {/* <span className={styles.headerTitle}>{getPageTitle()}</span> */}
-          {breadcrumbItems.length > 1 && (
+          {/* {breadcrumbItems.length > 1 && (
             <div style={{ padding: '0.5rem 1.75rem 0', borderBottom: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg-primary)' }}>
               <Breadcrumb items={breadcrumbItems} />
             </div>
-          )}
+          )} */}
           
           <div className={styles.headerRight}>
             <span className={styles.headerBadge}>Admin</span>

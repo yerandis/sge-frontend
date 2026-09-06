@@ -7,6 +7,8 @@ import EmployeeForm from '../../../components/employees/EmployeeForm/EmployeeFor
 import { useEffect } from 'react';
 import styles from '../../../components/employees/EmployeeForm/EmployeeForm.module.css';
 import type { Department, DepartmentFilter } from '../../../types/department.types';
+import { useBreadcrumb } from '../../../hooks/useBreadcrumb';
+import Breadcrumb from '../../../components/ui/Breadcrumb/Breadcrumb';
 
   const DEFAULT_FILTERS_DEPARTMENT: DepartmentFilter = {
     search: '',
@@ -26,6 +28,8 @@ export default function EmployeeNewPage() {
   const [serverErrors, setServerErrors]     = useState<ValidationErrors>({});
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage]     = useState<string | null>(null);
+
+  const breadcrumb = useBreadcrumb('Nuevo empleado');
 
   useEffect(() => {
     getDepartments(DEFAULT_FILTERS_DEPARTMENT)
@@ -70,6 +74,7 @@ export default function EmployeeNewPage() {
 
   return (
     <div className={styles.page}>
+      <Breadcrumb items={breadcrumb} />
       {/* Cabecera */}
       <div className={styles.pageHeader}>
         <Link to="/employees" className={styles.backBtn} title="Volver a la lista">

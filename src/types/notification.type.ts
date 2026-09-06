@@ -30,10 +30,10 @@
 // src/types/notification.types.ts
 
 export type NotificationType =
-  | 'EMPLOYEE_CREATED'
-  | 'EMPLOYEE_UPDATED'
-  | 'EMPLOYEE_DELETED'
-  | 'DEPARTMENT_CREATED'
+  | 'CREATED'
+  | 'UPDATED'
+  | 'DELETED'
+  // | 'DEPARTMENT_CREATED'
   | 'SYSTEM';
 
 export interface Notification {

@@ -144,6 +144,7 @@ export default function EmployeesPage() {
   }
 
   function handleStatusFilter(e: React.ChangeEvent<HTMLSelectElement>) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     setFilters(prev => ({ ...prev, status: e.target.value as any, page: 0 }));
   }
 
