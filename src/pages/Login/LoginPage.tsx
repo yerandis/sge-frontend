@@ -30,6 +30,7 @@ export default function LoginPage() {
     try {
       await login({ username, password });
       navigate('/dashboard', { replace: true });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       const msg = err.response?.data?.message;
       setError(msg || 'Credenciales inválidas. Verifica tu usuario y contraseña.');

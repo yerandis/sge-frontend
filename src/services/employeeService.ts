@@ -111,3 +111,23 @@ export async function getDashboardStats(): Promise<DashboardStats> {
   );
   return response.data.data;
 }
+
+//  ----- Para el Historial:
+
+export interface EmployeeHistoryEntry {
+  id:       string;
+  action:   'CREATE' | 'UPDATE' | 'DELETE';
+  username: string;
+  changes: {  field:    string; 
+              oldValue: string; 
+              newValue: string 
+            }[];
+  createdAt: string;
+}
+
+export async function getEmployeeHistory(id: string): Promise<EmployeeHistoryEntry[]> {
+  const res = await apiClient.get<ApiResponse<EmployeeHistoryEntry[]>>(
+    `/employees/${id}/history`
+  );
+  return res.data.data;
+}
