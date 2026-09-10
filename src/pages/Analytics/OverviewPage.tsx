@@ -62,7 +62,7 @@ export default function OverviewPage() {
 
   if (isLoading) return <Spinner message="Cargando analítica..." />;
 
-  const total = statusData.reduce((acc, d) => acc + d.value, 0);
+  // const total = statusData.reduce((acc, d) => acc + d.value, 0);
 
   return (
     <div className={styles.page}>
