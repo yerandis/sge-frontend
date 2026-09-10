@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import * as userService from '../../services/userServices';
 import { getRoles } from '../../services/roleService';
 import type { User, UserFormData, UserFilters } from '../../types/user.types';
@@ -9,33 +9,44 @@ import EmptyState from '../../components/ui/EmptyState/EmptyState';
 import Pagination from '../../components/ui/Pagination/Pagination';
 import styles from './UsersPage.module.css';
 
-// ─── Filtros iniciales ────────────────────────────────────────────
-const DEFAULT_FILTERS: UserFilters = {
-  search: '', page: 0, size: 10, sortBy: 'username', sortDir: 'asc',
-};
+// ─────────────────────────────────────────────────────────────────
+function formatLastLogin(date: string | null): string {
+  if (!date) return 'Nunca';
+  // Calcular la diferencia en el momento en que se llama, no en el render
+  const diff = Date.now() - new Date(date).getTime();
+  const mins = Math.floor(diff / 60000);
+  if (mins < 1)  return 'ahora mismo';
+  if (mins < 60) return `hace ${mins} min`;
+  const hrs = Math.floor(mins / 60);
+  if (hrs < 24)  return `hace ${hrs}h`;
+  const days = Math.floor(hrs / 24);
+  if (days < 30) return `hace ${days}d`;
+  return new Date(date).toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' });
+}
 
-// ─── Formulario vacío ─────────────────────────────────────────────
-const EMPTY_FORM: UserFormData = {
-  username: '', password: '', active: true, roleIds: [], employeeId: '',
-};
-
-// ─── Iniciales del avatar ─────────────────────────────────────────
 function getInitials(username: string): string {
   return username.substring(0, 2).toUpperCase();
 }
 
+const DEFAULT_FILTERS: UserFilters = {
+  search: '', page: 0, size: 10, sortBy: 'username', sortDir: 'asc',
+};
+
+const EMPTY_FORM: UserFormData = {
+  username: '', password: '', active: true, roleIds: [], employeeId: '',
+};
+
 export default function UsersPage() {
 
-  const [users,      setUsers]      = useState<User[]>([]);
-  const [roles,      setRoles]      = useState<Role[]>([]);
-  const [isLoading,  setIsLoading]  = useState(true);
-  const [error,      setError]      = useState<string | null>(null);
-  const [totalPages, setTotalPages] = useState(0);
-  const [totalElems, setTotalElems] = useState(0);
-  const [filters,    setFilters]    = useState<UserFilters>(DEFAULT_FILTERS);
-  const [searchInput,setSearchInput]= useState('');
+  const [users,       setUsers]       = useState<User[]>([]);
+  const [roles,       setRoles]       = useState<Role[]>([]);
+  const [isLoading,   setIsLoading]   = useState(true);
+  const [error,       setError]       = useState<string | null>(null);
+  const [totalPages,  setTotalPages]  = useState(0);
+  const [totalElems,  setTotalElems]  = useState(0);
+  const [filters,     setFilters]     = useState<UserFilters>(DEFAULT_FILTERS);
+  const [searchInput, setSearchInput] = useState('');
 
-  // ── Modal de formulario ───────────────────────────────────────
   const [modal, setModal] = useState<{
     isOpen:   boolean;
     editUser: User | null;
@@ -48,19 +59,16 @@ export default function UsersPage() {
     isSaving: false, errors: {}, apiError: null,
   });
 
-  // ── Modal de confirmación de eliminación ──────────────────────
   const [deleteModal, setDeleteModal] = useState<{
     isOpen: boolean; user: User | null; isLoading: boolean;
   }>({ isOpen: false, user: null, isLoading: false });
 
-  // ── Cargar roles (una sola vez) ───────────────────────────────
+  // ─── Cargar roles una sola vez ────────────────────────────────
   useEffect(() => {
-    getRoles()
-      .then(setRoles)
-      .catch(() => console.error('Error cargando roles'));
+    getRoles().then(setRoles).catch(console.error);
   }, []);
 
-  // ── Debounce del buscador ─────────────────────────────────────
+  // ─── Debounce del buscador ────────────────────────────────────
   useEffect(() => {
     const t = setTimeout(() => {
       setFilters(prev => ({ ...prev, search: searchInput, page: 0 }));
@@ -68,50 +76,52 @@ export default function UsersPage() {
     return () => clearTimeout(t);
   }, [searchInput]);
 
-  // ── Cargar usuarios ───────────────────────────────────────────
-  const fetchUsers = useCallback(async () => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      const data = await userService.getUsers(filters);
-      setUsers(data.content);
-      setTotalPages(data.totalPages);
-      setTotalElems(data.totalElements);
-    } catch {
-      setError('Error al cargar los usuarios.');
-    } finally {
-      setIsLoading(false);
+  // ─────────────────────────────────────────────────────────────
+  useEffect(() => {
+    let cancelled = false; // evitar setState si el componente se desmontó
+
+    async function loadUsers() {
+      setIsLoading(true);
+      setError(null);
+      try {
+        const data = await userService.getUsers(filters);
+        if (!cancelled) {
+          setUsers(data.content);
+          setTotalPages(data.totalPages);
+          setTotalElems(data.totalElements);
+        }
+      } catch {
+        if (!cancelled) setError('Error al cargar los usuarios.');
+      } finally {
+        if (!cancelled) setIsLoading(false);
+      }
     }
-  }, [filters]);
 
-  useEffect(() => { fetchUsers(); }, [fetchUsers]);
+    loadUsers();
 
-  // ── Abrir modal para crear ────────────────────────────────────
+    return () => { cancelled = true; }; // cleanup: cancelar si filters cambia antes de respuesta
+  }, [filters]); // ← depende de filters, no de fetchUsers
+
+  // ─── Funciones de modal ───────────────────────────────────────
   function openCreate() {
-    setModal({ 
-        isOpen:     true, 
-        editUser:   null, 
-        form:       EMPTY_FORM, 
-        isSaving:   false, 
-        errors:     {}, 
-        apiError:   null });
+    setModal({
+      isOpen: true, editUser: null, form: EMPTY_FORM,
+      isSaving: false, errors: {}, apiError: null,
+    });
   }
 
-  // ── Abrir modal para editar ───────────────────────────────────
   function openEdit(user: User) {
     setModal({
       isOpen: true,
       editUser: user,
       form: {
         username:   user.username,
-        password:   '',               // vacío = no cambiar
+        password:   '',
         active:     user.active,
         roleIds:    user.roles.map(r => r.id),
         employeeId: user.employee?.id ?? '',
       },
-      isSaving:  false,
-      errors:    {},
-      apiError:  null,
+      isSaving: false, errors: {}, apiError: null,
     });
   }
 
@@ -119,17 +129,15 @@ export default function UsersPage() {
     setModal(prev => ({ ...prev, isOpen: false }));
   }
 
-  // ── Validación en cliente ─────────────────────────────────────
   function validate(form: UserFormData, isCreate: boolean): Partial<Record<keyof UserFormData, string>> {
     const errs: Partial<Record<keyof UserFormData, string>> = {};
     if (!form.username.trim()) errs.username = 'El nombre de usuario es obligatorio';
-    if (form.username.trim().length < 3) errs.username = 'Mínimo 3 caracteres';
+    else if (form.username.trim().length < 3) errs.username = 'Mínimo 3 caracteres';
     if (isCreate && !form.password) errs.password = 'La contraseña es obligatoria al crear';
-    if (form.password && form.password.length < 8) errs.password = 'Mínimo 8 caracteres';
+    if (form.password && form.password.length < 6) errs.password = 'Mínimo 6 caracteres';
     return errs;
   }
 
-  // ── Guardar ───────────────────────────────────────────────────
   async function handleSave() {
     const isCreate = !modal.editUser;
     const errs = validate(modal.form, isCreate);
@@ -142,11 +150,7 @@ export default function UsersPage() {
     setModal(prev => ({ ...prev, isSaving: true, apiError: null }));
 
     try {
-      // Preparar payload: si el password está vacío en edición, no enviarlo
-      const payload: UserFormData = {
-        ...modal.form,
-        employeeId: modal.form.employeeId || '',
-      };
+      const payload: UserFormData = { ...modal.form, employeeId: modal.form.employeeId || '' };
 
       let saved: User;
       if (isCreate) {
@@ -165,7 +169,6 @@ export default function UsersPage() {
     }
   }
 
-  // ── Toggle activo/inactivo ────────────────────────────────────
   async function handleToggleActive(user: User) {
     try {
       const updated = await userService.toggleUserActive(user.id);
@@ -175,14 +178,13 @@ export default function UsersPage() {
     }
   }
 
-  // ── Eliminar ──────────────────────────────────────────────────
   async function handleConfirmDelete() {
     if (!deleteModal.user) return;
     setDeleteModal(prev => ({ ...prev, isLoading: true }));
     try {
       await userService.deleteUser(deleteModal.user.id);
       setUsers(prev => prev.filter(u => u.id !== deleteModal.user!.id));
-      setTotalElems(prev => prev - 1);
+      setTotalElems(prev => Math.max(0, prev - 1));
       setDeleteModal({ isOpen: false, user: null, isLoading: false });
     } catch {
       alert('Error al eliminar el usuario.');
@@ -190,34 +192,23 @@ export default function UsersPage() {
     }
   }
 
-  // ── Formatear última sesión ───────────────────────────────────
-  function formatLastLogin(date: string | null): string {
-    if (!date) return 'Nunca';
-    const d = new Date(date);
-    const diff = Date.now() - d.getTime();
-    const mins = Math.floor(diff / 60000);
-    if (mins < 60) return `hace ${mins} min`;
-    const hrs = Math.floor(mins / 60);
-    if (hrs < 24) return `hace ${hrs}h`;
-    return `hace ${Math.floor(hrs / 24)}d`;
-  }
-
-  // ─────────────────────────────────────────────────────────────
-  // RENDER
-  // ─────────────────────────────────────────────────────────────
+  // ─── Render ───────────────────────────────────────────────────
   return (
     <div className={styles.page}>
 
-      {/* Cabecera */}
       <div className={styles.pageHeader}>
         <div>
           <h1 className={styles.pageTitle}>Usuarios</h1>
           <p className={styles.pageSubtitle}>
-            {isLoading ? 'Cargando...' : `${totalElems} usuario${totalElems !== 1 ? 's' : ''} registrado${totalElems !== 1 ? 's' : ''}`}
+            {isLoading
+              ? 'Cargando...'
+              : `${totalElems} usuario${totalElems !== 1 ? 's' : ''} registrado${totalElems !== 1 ? 's' : ''}`
+            }
           </p>
         </div>
         <button className={styles.btnPrimary} onClick={openCreate}>
-          <svg style={{ width: '1rem', height: '1rem' }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+          <svg style={{ width: '1rem', height: '1rem' }} fill="none" viewBox="0 0 24 24"
+               stroke="currentColor" strokeWidth={2.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
           </svg>
           Nuevo Usuario
@@ -227,8 +218,10 @@ export default function UsersPage() {
       {/* Filtros */}
       <div className={styles.filterPanel}>
         <div className={styles.searchWrapper}>
-          <svg className={styles.searchIcon} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          <svg className={styles.searchIcon} fill="none" viewBox="0 0 24 24"
+               stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round"
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
           </svg>
           <input
             type="text"
@@ -247,14 +240,25 @@ export default function UsersPage() {
 
         {!isLoading && error && (
           <EmptyState title="Error al cargar" description={error}
-            action={<button className={styles.btnPrimary} onClick={fetchUsers}>Reintentar</button>} />
+            action={
+              <button className={styles.btnPrimary}
+                onClick={() => setFilters(prev => ({ ...prev }))}>
+                Reintentar
+              </button>
+            }
+          />
         )}
 
         {!isLoading && !error && users.length === 0 && (
           <EmptyState
-            title="No hay usuarios"
-            description="Aún no hay usuarios registrados. Crea el primero."
-            action={<button className={styles.btnPrimary} onClick={openCreate}>Crear usuario</button>}
+            title={searchInput ? 'Sin resultados' : 'No hay usuarios'}
+            description={searchInput
+              ? 'Ningún usuario coincide con la búsqueda.'
+              : 'Aún no hay usuarios registrados.'}
+            action={!searchInput
+              ? <button className={styles.btnPrimary} onClick={openCreate}>Crear usuario</button>
+              : undefined
+            }
           />
         )}
 
@@ -273,8 +277,6 @@ export default function UsersPage() {
               <tbody>
                 {users.map(user => (
                   <tr key={user.id}>
-
-                    {/* Usuario + empleado vinculado */}
                     <td>
                       <div className={styles.userCell}>
                         <div className={styles.avatar}>{getInitials(user.username)}</div>
@@ -288,8 +290,6 @@ export default function UsersPage() {
                         </div>
                       </div>
                     </td>
-
-                    {/* Roles */}
                     <td>
                       <div className={styles.roleTags}>
                         {user.roles.length === 0
@@ -300,39 +300,30 @@ export default function UsersPage() {
                         }
                       </div>
                     </td>
-
-                    {/* Estado */}
                     <td>
                       <span className={user.active ? styles.statusActive : styles.statusInactive}>
                         <span className={styles.statusDot} />
                         {user.active ? 'Activo' : 'Inactivo'}
                       </span>
                     </td>
-
-                    {/* Última sesión */}
                     <td style={{ color: 'var(--color-text-secondary)', fontSize: '0.8125rem' }}>
+                      {/* formatLastLogin está fuera del componente → no es problema */}
                       {formatLastLogin(user.lastLogin)}
                     </td>
-
-                    {/* Acciones */}
                     <td>
                       <div className={styles.actions}>
                         <button
                           className={`${styles.actionBtn} ${styles.actionBtnEdit}`}
-                          onClick={() => openEdit(user)}
-                          title="Editar usuario"
-                        >
+                          onClick={() => openEdit(user)} title="Editar">
                           <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                             <path strokeLinecap="round" strokeLinejoin="round"
                               d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931z" />
                           </svg>
                         </button>
-
                         <button
                           className={`${styles.actionBtn} ${styles.actionBtnToggle}`}
                           onClick={() => handleToggleActive(user)}
-                          title={user.active ? 'Desactivar' : 'Activar'}
-                        >
+                          title={user.active ? 'Desactivar' : 'Activar'}>
                           <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                             <path strokeLinecap="round" strokeLinejoin="round"
                               d={user.active
@@ -341,12 +332,10 @@ export default function UsersPage() {
                               } />
                           </svg>
                         </button>
-
                         <button
                           className={`${styles.actionBtn} ${styles.actionBtnDelete}`}
                           onClick={() => setDeleteModal({ isOpen: true, user, isLoading: false })}
-                          title="Eliminar usuario"
-                        >
+                          title="Eliminar">
                           <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                             <path strokeLinecap="round" strokeLinejoin="round"
                               d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
@@ -354,7 +343,6 @@ export default function UsersPage() {
                         </button>
                       </div>
                     </td>
-
                   </tr>
                 ))}
               </tbody>
@@ -362,7 +350,6 @@ export default function UsersPage() {
           </div>
         )}
 
-        {/* Paginación */}
         {!isLoading && !error && totalPages > 1 && (
           <Pagination
             currentPage={filters.page}
@@ -374,11 +361,11 @@ export default function UsersPage() {
         )}
       </div>
 
-      {/* ── MODAL: Crear / Editar ─────────────────────────────────── */}
+      {/* Modal Crear/Editar */}
       {modal.isOpen && (
-        <div className={styles.modalOverlay} onClick={e => e.target === e.currentTarget && closeModal()}>
+        <div className={styles.modalOverlay}
+          onClick={e => e.target === e.currentTarget && closeModal()}>
           <div className={styles.modalPanel}>
-
             <div className={styles.modalHeader}>
               <h2 className={styles.modalTitle}>
                 {modal.editUser ? `Editar: ${modal.editUser.username}` : 'Nuevo Usuario'}
@@ -391,62 +378,66 @@ export default function UsersPage() {
             </div>
 
             <div className={styles.modalBody}>
-
-              {/* Error de API */}
               {modal.apiError && (
-                <div style={{ background: 'var(--color-danger-light)', border: '1px solid #fca5a5',
-                  borderRadius: 'var(--radius-md)', padding: '0.75rem 1rem',
-                  color: 'var(--color-danger)', fontSize: '0.875rem' }}>
+                <div style={{
+                  background: 'var(--color-danger-light)',
+                  border: '1px solid #fca5a5',
+                  borderRadius: 'var(--radius-md)',
+                  padding: '0.75rem 1rem',
+                  color: 'var(--color-danger)',
+                  fontSize: '0.875rem',
+                }}>
                   {modal.apiError}
                 </div>
               )}
 
-              <div className={styles.formGrid}>
-
-                {/* Username */}
-                <div className={`${styles.field} ${styles.formGridFull}`}>
-                  <label className={styles.label}>
-                    Nombre de usuario<span className={styles.required}>*</span>
-                  </label>
-                  <input
-                    type="text"
-                    className={`${styles.input} ${modal.errors.username ? styles.inputError : ''}`}
-                    value={modal.form.username}
-                    onChange={e => setModal(prev => ({
-                      ...prev, form: { ...prev.form, username: e.target.value },
-                      errors: { ...prev.errors, username: undefined },
-                    }))}
-                    placeholder="juan.perez"
-                    maxLength={50}
-                  />
-                  {modal.errors.username && <span className={styles.errorMsg}>{modal.errors.username}</span>}
-                </div>
-
-                {/* Contraseña */}
-                <div className={`${styles.field} ${styles.formGridFull}`}>
-                  <label className={styles.label}>
-                    Contraseña{!modal.editUser && <span className={styles.required}>*</span>}
-                  </label>
-                  <input
-                    type="password"
-                    className={`${styles.input} ${modal.errors.password ? styles.inputError : ''}`}
-                    value={modal.form.password}
-                    onChange={e => setModal(prev => ({
-                      ...prev, form: { ...prev.form, password: e.target.value },
-                      errors: { ...prev.errors, password: undefined },
-                    }))}
-                    placeholder={modal.editUser ? 'Dejar vacío para mantener la actual' : 'Mínimo 6 caracteres'}
-                    autoComplete="new-password"
-                  />
-                  {modal.errors.password && <span className={styles.errorMsg}>{modal.errors.password}</span>}
-                  {modal.editUser && (
-                    <span className={styles.hint}>Si dejas este campo vacío, la contraseña no se modifica.</span>
-                  )}
-                </div>
-
+              <div className={styles.field}>
+                <label className={styles.label}>
+                  Nombre de usuario<span className={styles.required}>*</span>
+                </label>
+                <input
+                  type="text"
+                  className={`${styles.input} ${modal.errors.username ? styles.inputError : ''}`}
+                  value={modal.form.username}
+                  onChange={e => setModal(prev => ({
+                    ...prev,
+                    form: { ...prev.form, username: e.target.value },
+                    errors: { ...prev.errors, username: undefined },
+                  }))}
+                  placeholder="juan.perez"
+                  maxLength={50}
+                />
+                {modal.errors.username && (
+                  <span className={styles.errorMsg}>{modal.errors.username}</span>
+                )}
               </div>
 
-              {/* Estado activo */}
+              <div className={styles.field}>
+                <label className={styles.label}>
+                  Contraseña{!modal.editUser && <span className={styles.required}>*</span>}
+                </label>
+                <input
+                  type="password"
+                  className={`${styles.input} ${modal.errors.password ? styles.inputError : ''}`}
+                  value={modal.form.password}
+                  onChange={e => setModal(prev => ({
+                    ...prev,
+                    form: { ...prev.form, password: e.target.value },
+                    errors: { ...prev.errors, password: undefined },
+                  }))}
+                  placeholder={modal.editUser ? 'Dejar vacío para mantener la actual' : 'Mínimo 6 caracteres'}
+                  autoComplete="new-password"
+                />
+                {modal.errors.password && (
+                  <span className={styles.errorMsg}>{modal.errors.password}</span>
+                )}
+                {modal.editUser && (
+                  <span className={styles.hint}>
+                    Si dejas vacío este campo, la contraseña no se modifica.
+                  </span>
+                )}
+              </div>
+
               <label className={styles.checkboxRow} style={{ cursor: 'pointer' }}>
                 <input
                   type="checkbox"
@@ -458,44 +449,40 @@ export default function UsersPage() {
                 <span className={styles.checkboxLabel}>Usuario activo</span>
               </label>
 
-              {/* Selector de roles */}
               <div className={styles.field}>
                 <label className={styles.label}>Roles</label>
                 <div className={styles.rolesSelector}>
-                  {roles.length === 0 && (
-                    <p style={{ fontSize: '0.875rem', color: 'var(--color-text-secondary)' }}>
-                      No hay roles disponibles. Crea roles primero.
-                    </p>
-                  )}
-                  {roles.map(role => {
-                    const isSelected = modal.form.roleIds.includes(role.id);
-                    return (
-                      <label
-                        key={role.id}
-                        className={`${styles.roleOption} ${isSelected ? styles.roleOptionSelected : ''}`}
-                      >
-                        <input
-                          type="checkbox"
-                          checked={isSelected}
-                          onChange={() => {
-                            const next = isSelected
-                              ? modal.form.roleIds.filter(id => id !== role.id)
-                              : [...modal.form.roleIds, role.id];
-                            setModal(prev => ({ ...prev, form: { ...prev.form, roleIds: next } }));
-                          }}
-                        />
-                        <div>
-                          <div className={styles.roleOptionName}>{role.name}</div>
-                          {role.description && (
-                            <div className={styles.roleOptionDesc}>{role.description}</div>
-                          )}
-                        </div>
-                      </label>
-                    );
-                  })}
+                  {roles.length === 0
+                    ? <p style={{ fontSize: '0.875rem', color: 'var(--color-text-secondary)' }}>
+                        No hay roles disponibles.
+                      </p>
+                    : roles.map(role => {
+                        const isSelected = modal.form.roleIds.includes(role.id);
+                        return (
+                          <label key={role.id}
+                            className={`${styles.roleOption} ${isSelected ? styles.roleOptionSelected : ''}`}>
+                            <input
+                              type="checkbox"
+                              checked={isSelected}
+                              onChange={() => {
+                                const next = isSelected
+                                  ? modal.form.roleIds.filter(id => id !== role.id)
+                                  : [...modal.form.roleIds, role.id];
+                                setModal(prev => ({ ...prev, form: { ...prev.form, roleIds: next } }));
+                              }}
+                            />
+                            <div>
+                              <div className={styles.roleOptionName}>{role.name}</div>
+                              {role.description && (
+                                <div className={styles.roleOptionDesc}>{role.description}</div>
+                              )}
+                            </div>
+                          </label>
+                        );
+                      })
+                  }
                 </div>
               </div>
-
             </div>
 
             <div className={styles.modalFooter}>
@@ -509,24 +496,21 @@ export default function UsersPage() {
                 }
               </button>
             </div>
-
           </div>
         </div>
       )}
 
-      {/* ── MODAL: Confirmar eliminación ──────────────────────────── */}
       <ConfirmModal
         isOpen={deleteModal.isOpen}
         title="Eliminar usuario"
         message={deleteModal.user
-          ? `¿Estás seguro de que deseas eliminar al usuario "${deleteModal.user.username}"? Esta acción no se puede deshacer.`
+          ? `¿Estás seguro de que deseas eliminar al usuario "${deleteModal.user.username}"?`
           : ''}
         confirmLabel="Sí, eliminar"
         isLoading={deleteModal.isLoading}
         onConfirm={handleConfirmDelete}
         onCancel={() => setDeleteModal({ isOpen: false, user: null, isLoading: false })}
       />
-
     </div>
   );
 }
