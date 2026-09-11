@@ -14,9 +14,14 @@ export interface UserEmployee {
 export interface User {
   id:        string;
   username:  string;
+  email:     string;
+  firstName: string;
+  lastName:  string;
+  avatarUrl: string | null;
+  password:  string | null;
   active:    boolean;
   roles:     Role[];
-  employee:  UserEmployee | null;
+  employee:  UserEmployee;
   lastLogin: string | null;
   createdAt: string;
   updatedAt: string;
@@ -24,6 +29,10 @@ export interface User {
 
 export interface UserFormData {
   username:   string;
+  email:      string;
+  firstName:  string;
+  lastName:   string;
+  avatarUrl:  string | null;
   password:   string;        // vacío = no cambiar (en edición)
   active:     boolean;
   roleIds:    string[];      // UUIDs de roles seleccionados

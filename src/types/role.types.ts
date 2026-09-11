@@ -46,3 +46,12 @@ export interface RoleFormData {
   isDefault:     boolean;
   permissionIds: string[];  // UUIDs de los permisos seleccionados
 }
+
+export interface RoleFilter {
+  search?:  string;
+  name?:     string;
+  page:     number;
+  size:     number;
+  sortBy:   string;
+  sortDir:  'asc' | 'desc';
+}

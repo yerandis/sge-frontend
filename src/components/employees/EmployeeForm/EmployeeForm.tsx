@@ -72,25 +72,6 @@ export default function EmployeeForm({
    */
   useEffect(() => {
     if (initialData) {
-
-// Error: Calling setState synchronously within an effect can trigger cascading renders
-
-// Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
-// * Update external systems with the latest state from React.
-// * Subscribe for updates from some external system, calling setState in a callback function when external state changes.
-
-// Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
-
-// C:\Users\uyera\IdeaProjects\React\Sistema-Gestion-Empleados\sge-frontend\src\components\employees\EmployeeForm\EmployeeForm.tsx:74:7
-//   72 |   useEffect(() => {
-//   73 |     if (initialData) {
-// > 74 |       setFormData({
-//      |       ^^^^^^^^^^^ Avoid calling setState() directly within an effect
-//   75 |         firstName: initialData.firstName,
-//   76 |         lastName: initialData.lastName,
-//   77 |         email: initialData.email,
-//  *******   por el error anterior se tuvo que agregar la linea siguiente
-
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setFormData({
         firstName: initialData.firstName,

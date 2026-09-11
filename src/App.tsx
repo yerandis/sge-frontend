@@ -16,8 +16,9 @@ import RolesPage from './pages/Roles/RolesPage';
 
 import NotificationToast from './components/notifications/NotificationToast';
 import NotificationPanel from './components/notifications/NotificationPanel';
-import UsersPage from './pages/Users/UsersPage';
+import UsersPage from './pages/Users/Users/UsersPage';
 import OverviewPage from './pages/Analytics/OverviewPage';
+import UserNewPage from './pages/Users/UserNew/UserNewPage';
 
 export default function App() {
   return (
@@ -35,20 +36,21 @@ export default function App() {
           {/* ADMINISTRATION MODULE */}
             <Route path="/dashboard" element={<DashboardPage />} />
             {/* Employees */}
-            <Route path="/employees" element={<EmployeesPage />} />
-            <Route path="/employees/new" element={<EmployeeNewPage />} />
-            <Route path="/employees/:id" element={<EmployeeDetailPage />} />
+            <Route path="/employees"          element={<EmployeesPage />} />
+            <Route path="/employees/new"      element={<EmployeeNewPage />} />
+            <Route path="/employees/:id"      element={<EmployeeDetailPage />} />
             <Route path="/employees/:id/edit" element={<EmployeeEditPage />} />
             {/* Departments */}
-            <Route path="/departments" element={<DepartmentPage/>} />
-            <Route path="/departments/:id" element={<DepartmentDetailPage />} />
-            <Route path="/departments/new" element={<DepartmentNewPage />} />
+            <Route path="/departments"          element={<DepartmentPage/>} />
+            <Route path="/departments/:id"      element={<DepartmentDetailPage />} />
+            <Route path="/departments/new"      element={<DepartmentNewPage />} />
             <Route path="/departments/:id/edit" element={<DepartmentEditPage />} />
             {/* Roles */}
             {/* <Route element={<PermissionRoute permission="ROLE_READ" />}> */}
             <Route path="/roles" element={<RolesPage />} />
             {/* User */}
-            <Route path="/users" element={<UsersPage />} />
+            <Route path="/users"      element={<UsersPage />} />
+            <Route path="/users/new"  element={<UserNewPage/>}> </Route>
             {/* ANALITIC MODULE  */}
              <Route path="/analytics/overview"     element={<OverviewPage />} />
              <Route path="/analytics/employees"    element={<div>Análisis de empleados — próximamente</div>} />

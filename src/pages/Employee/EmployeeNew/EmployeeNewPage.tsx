@@ -34,7 +34,7 @@ export default function EmployeeNewPage() {
   useEffect(() => {
     getDepartments(DEFAULT_FILTERS_DEPARTMENT)
       .then(data => setDepartments(data.content))
-      .catch(() => setErrorMessage('No se pudieron cargar los departamentos.'))
+      .catch(() => setErrorMessage('No se pudo cargar la lista de departamentos.'))
       .finally(() => setIsLoadingDepts(false));
   }, []);
 

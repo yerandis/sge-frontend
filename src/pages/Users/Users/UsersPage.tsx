@@ -1,13 +1,14 @@
 import { useState, useEffect, useRef } from 'react';
-import * as userService from '../../services/userServices';
-import { getRoles } from '../../services/roleService';
-import type { User, UserFormData, UserFilters } from '../../types/user.types';
-import type { Role } from '../../types/role.types';
-import ConfirmModal from '../../components/ui/ConfirmModal/ConfirmModal';
-import Spinner from '../../components/ui/Spinner/Spinner';
-import EmptyState from '../../components/ui/EmptyState/EmptyState';
-import Pagination from '../../components/ui/Pagination/Pagination';
+import * as userService from '../../../services/userServices';
+import { getRoles } from '../../../services/roleService';
+import type { User, UserFormData, UserFilters } from '../../../types/user.types';
+import type { Role } from '../../../types/role.types';
+import ConfirmModal from '../../../components/ui/ConfirmModal/ConfirmModal';
+import Spinner from '../../../components/ui/Spinner/Spinner';
+import EmptyState from '../../../components/ui/EmptyState/EmptyState';
+import Pagination from '../../../components/ui/Pagination/Pagination';
 import styles from './UsersPage.module.css';
+import { Link } from 'react-router-dom';
 
 // ─────────────────────────────────────────────────────────────────
 function formatLastLogin(date: string | null): string {
@@ -33,7 +34,15 @@ const DEFAULT_FILTERS: UserFilters = {
 };
 
 const EMPTY_FORM: UserFormData = {
-  username: '', password: '', active: true, roleIds: [], employeeId: '',
+  username:   '', 
+  password:   '', 
+  email:      '',
+  firstName:  '',
+  lastName:   '',
+  avatarUrl:  null,
+  active:     true, 
+  roleIds:    [], 
+  employeeId: '',
 };
 
 export default function UsersPage() {
@@ -115,10 +124,14 @@ export default function UsersPage() {
       isOpen: true,
       editUser: user,
       form: {
-        username:   user.username,
-        password:   '',
-        active:     user.active,
-        roleIds:    user.roles.map(r => r.id),
+        username: user.username,
+        password: '',
+        email: '',
+        firstName: '',
+        lastName: '',
+        avatarUrl: null,
+        active: user.active,
+        roleIds: user.roles.map(r => r.id),
         employeeId: user.employee?.id ?? '',
       },
       isSaving: false, errors: {}, apiError: null,
@@ -135,6 +148,11 @@ export default function UsersPage() {
     else if (form.username.trim().length < 3) errs.username = 'Mínimo 3 caracteres';
     if (isCreate && !form.password) errs.password = 'La contraseña es obligatoria al crear';
     if (form.password && form.password.length < 6) errs.password = 'Mínimo 6 caracteres';
+    if (!form.email.trim()) {
+      errs.email = 'El email es obligatorio';
+      } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
+      errs.email = 'El email no tiene un formato válido';
+    }
     return errs;
   }
 
@@ -206,13 +224,19 @@ export default function UsersPage() {
             }
           </p>
         </div>
-        <button className={styles.btnPrimary} onClick={openCreate}>
+        {/* <button className={styles.btnPrimary} onClick={openCreate}>
           <svg style={{ width: '1rem', height: '1rem' }} fill="none" viewBox="0 0 24 24"
                stroke="currentColor" strokeWidth={2.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
           </svg>
           Nuevo Usuario
-        </button>
+        </button> */}
+        <Link to="/users/new" className={styles.btnPrimary}>
+          <svg className={styles.btnPrimaryIcon} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+          </svg>
+          Nuevo Usuario
+        </Link>
       </div>
 
       {/* Filtros */}
