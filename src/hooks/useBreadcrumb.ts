@@ -77,8 +77,33 @@ export function useBreadcrumb(entityName?: string): BreadcrumbItem[] {
       ];
     }
 
-    //  --------------------- Roles   --------------------------
+    //  --------------------- Usuario   --------------------------
+       if (path === '/users') {
+      return [base, { label: 'Usuarios' }];
+    }
 
+    if (path === '/users/new') {
+      return [base, 
+        { label: 'Usuarios', path: '/users' }, 
+        { label: entityName ?? 'Nuevo Usuario' }];
+    }
+
+    if (id && path === `/users/${id}`) {
+      return [
+        base,
+        { label: 'Usuarios', path: '/users' },
+        { label: entityName ?? 'Usuario' },
+      ];
+    }
+
+    if (id && path === `/users/${id}/edit`) {
+      return [
+        base,
+        { label: 'Usuarios', path: '/users' },
+        { label: entityName ?? 'Usuario', path: `/users/${id}` },
+        { label: 'Editar' },
+      ];
+    }
     return [base];
   }, [location.pathname, id, entityName]);
 }

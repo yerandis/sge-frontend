@@ -73,6 +73,16 @@ export default function UserForm({
     }
   }, [initialData]);
 
+ // ─── Toggle de permiso individual ────────────────────────────
+  function toggleRoles(roleId: string) {
+    const current = formData.roleIds;
+    const next = current.includes(roleId)
+      ? current.filter(id => id !== roleId)
+      : [...current, roleId];
+
+    setFormData(prev => ({ ...prev, ['roleIds']: next }));
+  }
+
   //    Handler generico para inputs y selects
   function handleChange(
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -241,7 +251,9 @@ export default function UserForm({
                 <option value="">
                   {isLoadingEmployees ? 'Cargando empleado...' : 'Seleccionar empleado'}
                 </option>
-                  <option key={employee.id} value={employee.id}>{employee.firstName}</option>
+                  {employee.map(e => (
+                    <option key={e.id} value={e.id}> {e.firstName} {e.lastName} </option>
+                  ))}
               </select>
               {errors.employeeId && <span className={styles.errorMsg}>{errors.employeeId}</span>}
             </div>
@@ -274,12 +286,7 @@ export default function UserForm({
                             <input
                               type="checkbox"
                               checked={isSelected}
-                              onChange={() => {
-                                const next = isSelected
-                                  ? formData.roleIds.filter(id => id !== role.id)
-                                  : [...formData.roleIds, role.id];
-                                setFormData(prev => ({ ...prev, form: { ...prev, roleIds: next } }));
-                              }}
+                              onChange={() => toggleRoles(role.id)}
                               // disabled={isLoadingRoles}
 
                             />

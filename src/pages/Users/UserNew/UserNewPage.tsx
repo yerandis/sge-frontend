@@ -16,23 +16,23 @@ const DEFAUL_FILTERS_EMPLOYEES: EmployeeFilters = {
     search:         '',
     status:         'ACTIVE',
     departmentId:   '',
-      page:         0,
-      size:         10,
-      sortBy:       '',
-      sortDir:      'asc',
+    page:           0,
+    size:           10,
+    sortBy:         '',
+    sortDir:        'asc',
 }
 
 export default function UserNewPage () {
     const navigate = useNavigate();
 
-    const [employees, setEmployees] = useState<Employee[]>([]);
-    const [roleIds, setRolesIds] = useState<Role[]>([]);
-    const [isLoadingEmployees, setIsLoadingEmployees] = useState(true);
-    const [isLoadingRoleIds, setIsLoadingRoleIds] = useState(true);
-    const [isSubmitting, setIsSubmitting]     = useState(false);
-    const [serverErrors, setServerErrors]     = useState<ValidationErrors>({});
-    const [successMessage, setSuccessMessage] = useState<string | null>(null);
-    const [errorMessage, setErrorMessage]     = useState<string | null>(null);
+    const [employees, setEmployees]                     = useState<Employee[]>([]);
+    const [roleIds, setRolesIds]                        = useState<Role[]>([]);
+    const [isLoadingEmployees, setIsLoadingEmployees]   = useState(true);
+    const [isLoadingRoleIds, setIsLoadingRoleIds]       = useState(true);
+    const [isSubmitting, setIsSubmitting]               = useState(false);
+    const [serverErrors, setServerErrors]               = useState<ValidationErrors>({});
+    const [successMessage, setSuccessMessage]           = useState<string | null>(null);
+    const [errorMessage, setErrorMessage]               = useState<string | null>(null);
 
     const breadcrumb = useBreadcrumb('Nuevo usuario');
 
