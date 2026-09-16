@@ -21,7 +21,7 @@ export interface User {
   password:  string | null;
   active:    boolean;
   roles:     Role[];
-  employee:  UserEmployee;
+  employee:  UserEmployee | null;  
   lastLogin: string | null;
   createdAt: string;
   updatedAt: string;
@@ -36,7 +36,7 @@ export interface UserFormData {
   password:   string;        // vacío = no cambiar (en edición)
   active:     boolean;
   roleIds:    string[];      // UUIDs de roles seleccionados
-  employeeId: string | '';   // UUID del empleado vinculado (opcional)
+  employeeId: string | '';
 }
 
 export interface UserFilters {

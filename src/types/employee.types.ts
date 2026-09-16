@@ -94,13 +94,13 @@ export interface ApiResponse<T> {
  * Se convierten en query params de la URL.
  */
 export interface EmployeeFilters {
-  search?: string;
-  status?: EmployeeStatus | '';
-  departmentId?: string | '';
-  page: number;
-  size: number;
-  sortBy: string;
-  sortDir: 'asc' | 'desc';
+  search?:        string;
+  status?:        EmployeeStatus | '';
+  departmentId?:  string | '';
+  page:           number;
+  size:           number;
+  sortBy:         string;
+  sortDir:        'asc' | 'desc';
 }
 
 /**

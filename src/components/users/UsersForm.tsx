@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Spinner from "../ui/Spinner/Spinner";
 import type { User, UserFormData } from "../../types/user.types";
@@ -8,7 +8,7 @@ import type { Role } from "../../types/role.types";
 
 interface UserFormProps {
     initialData?:   User;
-    employee:       Employee[];
+    employees:      Employee[];
     roles:          Role[];
     isLoadingEmployees: boolean;
     isLoadingRoles: boolean;
@@ -36,7 +36,7 @@ const EMPTY_FORM: UserFormData = {
 
 export default function UserForm({
     initialData,
-    employee,
+    employees,
     roles,
     isLoadingEmployees,
     isLoadingRoles,
@@ -47,6 +47,7 @@ export default function UserForm({
     onSubmit,
     cancelTo,
 }: UserFormProps) {
+
     const isEditMode = Boolean(initialData);
     //  estado del formulario
     const [formData, setFormData] = useState<UserFormData>(EMPTY_FORM);
@@ -60,15 +61,15 @@ export default function UserForm({
     if (initialData) {
         // eslint-disable-next-line react-hooks/set-state-in-effect
         setFormData({
-            username:       initialData.username,
-            email:          initialData.email,
-            firstName:      initialData.firstName,
-            lastName:       initialData.lastName,
-            avatarUrl:      initialData.avatarUrl ?? '',
-            password:       initialData.password ?? '',
-            active:         initialData.active,
-            roleIds:        initialData.roles.map(r => r.id),
-            employeeId:     initialData.employee.id,
+          username:   initialData.username,
+          email:      initialData.email,
+          firstName:  initialData.firstName,
+          lastName:   initialData.lastName,
+          avatarUrl:  initialData.avatarUrl ?? '',
+          password:   '',                              // nunca precargues el hash/valor de password
+          active:     initialData.active,
+          roleIds:    initialData.roles.map(r => r.id),
+          employeeId: initialData.employee?.id ?? '',  // ← null-safe
         });
     }
   }, [initialData]);
@@ -251,8 +252,8 @@ export default function UserForm({
                 <option value="">
                   {isLoadingEmployees ? 'Cargando empleado...' : 'Seleccionar empleado'}
                 </option>
-                  {employee.map(e => (
-                    <option key={e.id} value={e.id}> {e.firstName} {e.lastName} </option>
+                  {(employees ?? []).map(e => (
+                    <option key={e.id} value={e.id}>{e.firstName} {e.lastName}</option>
                   ))}
               </select>
               {errors.employeeId && <span className={styles.errorMsg}>{errors.employeeId}</span>}
@@ -263,9 +264,7 @@ export default function UserForm({
                 <input
                   type="checkbox"
                   checked={formData.active}
-                  onChange={e => setFormData(prev => ({
-                    ...prev, form: { ...prev, active: e.target.checked }
-                  }))}
+                  onChange={e => setFormData(prev => ({ ...prev, active: e.target.checked }))}
                 />
                 <span className={styles.checkboxLabel}>Usuario activo</span>
             </label>

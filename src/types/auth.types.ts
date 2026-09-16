@@ -1,20 +1,18 @@
-import type { Permission } from "./role.types";
-
 export interface LoginCredentials {
   username: string;
   password: string;
 }
 
 export interface AuthUser {
-  id:          string;
-  username:    string;
-  email:       string;
-  fullName:    string;
-  tenantId:    string | null;
-  isMasterAdmin: boolean;
-  roles:       string[];        // ← Ahora lista de nombres de rol
-  permissions: Permission[];    // ← los permisos granulares del usuario
-}
+  id:            string;
+  username:      string;
+  email:         string;
+  fullName:      string;
+  roles:         string[];
+  permissions:   string[]; 
+  // tenantId:    string | null;
+  // isMasterAdmin: boolean;
+  }
 
 export interface AuthTokens {
   accessToken: string;

@@ -102,7 +102,7 @@ export default function LoginPage() {
         {/* Hint de demo */}
         <div className={styles.demoHint}>
           <strong>Credenciales de prueba</strong><br />
-          Usuario: <strong>admin</strong> · Contraseña: <strong>admin123</strong>
+          Usuario: <strong>admin</strong> · Contraseña: <strong>Admin123</strong>
         </div>
 
       </div>

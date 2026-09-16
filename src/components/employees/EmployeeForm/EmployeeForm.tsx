@@ -7,18 +7,15 @@ import type { Department } from '../../../types/department.types';
 
 interface EmployeeFormProps {
   /** Si se pasa, el formulario está en modo edición y carga estos datos */
-  initialData?: Employee;
-  departments: Department[];
+  initialData?:         Employee;
+  departments:          Department[];
   isLoadingDepartments: boolean;
-  isSubmitting: boolean;
-  /** Errores de validación del backend (campo → mensaje) */
-  serverErrors: ValidationErrors;
-  /** Mensaje de éxito tras guardar */
-  successMessage: string | null;
-  /** Mensaje de error general */
-  errorMessage: string | null;
-  onSubmit: (data: EmployeeFormData) => void;
-  cancelTo: string;
+  isSubmitting:         boolean;
+  serverErrors:         ValidationErrors; /** Errores de validación del backend (campo → mensaje) */
+  successMessage:       string | null;    /** Mensaje de éxito tras guardar */
+  errorMessage:         string | null;    /** Mensaje de error general */
+  onSubmit:             (data: EmployeeFormData) => void;
+  cancelTo:             string;
 }
 
 /** Estado vacío del formulario */
@@ -58,6 +55,7 @@ export default function EmployeeForm({
   onSubmit,
   cancelTo,
 }: EmployeeFormProps) {
+
   const isEditMode = Boolean(initialData);
 
   // Estado del formulario
@@ -72,6 +70,8 @@ export default function EmployeeForm({
    */
   useEffect(() => {
     if (initialData) {
+      console.log(initialData.department)
+      console.log(initialData.department.name)
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setFormData({
         firstName: initialData.firstName,

@@ -8,7 +8,7 @@ import Spinner from '../../../components/ui/Spinner/Spinner';
 import EmptyState from '../../../components/ui/EmptyState/EmptyState';
 import Pagination from '../../../components/ui/Pagination/Pagination';
 import styles from './UsersPage.module.css';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 // ─────────────────────────────────────────────────────────────────
 function formatLastLogin(date: string | null): string {
@@ -46,6 +46,7 @@ const EMPTY_FORM: UserFormData = {
 };
 
 export default function UsersPage() {
+  const navigate = useNavigate();
 
   const [users,       setUsers]       = useState<User[]>([]);
   const [roles,       setRoles]       = useState<Role[]>([]);
@@ -338,10 +339,22 @@ export default function UsersPage() {
                       <div className={styles.actions}>
                         <button
                           className={`${styles.actionBtn} ${styles.actionBtnEdit}`}
-                          onClick={() => openEdit(user)} title="Editar">
+                          // onClick={() => openEdit(user)} title="Editar">
+                            onClick={() => navigate(`/users/${user.id}/edit`)}>
                           <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                             <path strokeLinecap="round" strokeLinejoin="round"
                               d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931z" />
+                          </svg>
+                        </button>
+                        {/* Ver detalle */}
+                        <button
+                          className={`${styles.actionBtn} ${styles.actionBtnView}`}
+                          onClick={() => navigate(`/users/${user.id}`)}
+                          title="Ver detalle"
+                        >
+                          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                           </svg>
                         </button>
                         <button

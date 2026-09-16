@@ -39,6 +39,12 @@ apiClient.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
+    if (error.response?.status === 403) {
+  // Aquí usa tu sistema de notificaciones (ya tienes NotificationToast)
+        window.dispatchEvent(new CustomEvent('app:forbidden', {
+          detail: error.response.data?.message ?? 'No tienes permisos para esta acción'
+        }));
+      }
     // Si es 401 y no es un retry y no es la ruta de login
     if (
       error.response?.status === 401 &&

@@ -98,7 +98,7 @@ export default function UserNewPage () {
       </div>
 
       <UserForm
-        employee={employees}
+        employees={employees}
         roles={roleIds}
         isLoadingEmployees={isLoadingEmployees}
         isLoadingRoles={isLoadingRoleIds}

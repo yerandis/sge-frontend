@@ -118,6 +118,7 @@
 }
 .actionBtn svg { width: 0.9375rem; height: 0.9375rem; }
 .actionBtnEdit:hover    { background-color: #fffbeb; color: #d97706; border-color: #d97706; }
+.actionBtnView:hover    { background-color: var(--color-primary-light); color: #27603468; border-color: #193e2168; }
 .actionBtnToggle:hover  { background-color: var(--color-primary-light); color: var(--color-primary); border-color: var(--color-primary); }
 .actionBtnDelete:hover  { background-color: var(--color-danger-light); color: var(--color-danger); border-color: var(--color-danger); }
 

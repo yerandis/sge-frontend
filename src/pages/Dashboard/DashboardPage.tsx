@@ -4,6 +4,7 @@ import { getDashboardStats } from '../../services/employeeService';
 import type { DashboardStats } from '../../types/employee.types';
 import StatCard from './StatCard';
 import styles from './DashboardPage.module.css';
+import Can from '../../components/auth/Can';
 
 /**
  * DashboardPage: primera página que ve el usuario.
@@ -162,9 +163,11 @@ export default function DashboardPage() {
         <div className={styles.section}>
           <div className={styles.sectionHeader}>
             <h2 className={styles.sectionTitle}>Distribución de la plantilla</h2>
-            <Link to="/employees" className={styles.sectionLink}>
-              Ver todos los empleados →
-            </Link>
+            <Can permission="EMPLOYEE_READ">
+              <Link to="/employees" className={styles.sectionLink}>
+                Ver todos los empleados →
+              </Link>
+            </Can>
           </div>
           <div className={styles.sectionBody}>
             {/* Barra de progreso activos vs inactivos */}

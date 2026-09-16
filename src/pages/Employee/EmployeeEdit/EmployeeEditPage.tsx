@@ -52,6 +52,7 @@ export default function EmployeeEditPage() {
       .then(([emp, depts]) => {
         setEmployee(emp);
         setDepartments(depts.content);
+        console.log(depts)
       })
       .catch(() => {
         setErrorMessage('No se pudo cargar la información del empleado.');
