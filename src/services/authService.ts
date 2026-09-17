@@ -1,5 +1,5 @@
 import apiClient from './axiosConfig';
-import type { LoginCredentials, AuthUser, AuthTokens } from '../types/auth.types';
+import type { LoginCredentials, AuthUser } from '../types/auth.types';
 import type { ApiResponse } from '../types/employee.types';
 
 const TOKEN_KEY = 'sge_access_token';
@@ -87,4 +87,14 @@ export function getSavedUser(): AuthUser | null {
 
 export function isSessionActive(): boolean {
   return Boolean(getAccessToken() && getSavedUser());
+}
+
+export function isTokenExpired(token: string): boolean {
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    if (!payload.exp) return true;
+    return payload.exp * 1000 < Date.now();
+  } catch {
+    return true;
+  }
 }

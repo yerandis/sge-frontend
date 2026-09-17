@@ -55,7 +55,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const hasRole = useCallback((role: 'ADMIN' | 'USER' | 'VIEWER') => {
     if (!user) return false;
     const hierarchy = { ADMIN: 3, USER: 2, VIEWER: 1 };
-    return hierarchy[user.role] >= hierarchy[role];
+    return hierarchy[user.roles] >= hierarchy[role];
   }, [user]);
 
   return (

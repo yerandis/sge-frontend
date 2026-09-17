@@ -107,3 +107,13 @@
 .detailValueMuted { color: var(--color-text-secondary); font-weight: 400; }
 
 .salaryValue { font-size: 1.125rem; font-weight: 700; color: var(--color-primary); }
+
+/*    ---   RESPONSIVE    ----  */
+
+@media (max-width: 768px) {
+  .infoGrid {           /* usa el nombre real de esa clase en tu archivo */
+    grid-template-columns: 1fr;
+  }
+
+  .page { padding-bottom: 1.5rem; }
+}

@@ -359,52 +359,57 @@ export default function EmployeesPage() {
                       </div>
                     </td>
 
-                    <td><span className={styles.positionText}>{employee.position}</span></td>
+                    {/* <td><span className={styles.positionText}>{employee.position}</span></td>
                     <td>{employee.department.name}</td>
                     <td><span className={styles.salaryText}>{formatCurrency(employee.salary)}</span></td>
                     <td>{formatDate(employee.hireDate)}</td>
-                    <td><Badge status={employee.status} /></td>
+                    <td><Badge status={employee.status} /></td> */}
+                    <td data-label="Cargo"><span className={styles.positionText}>{employee.position}</span></td>
+                    <td data-label="Departamento">{employee.department.name}</td>
+                    <td data-label="Salario"><span className={styles.salaryText}>{formatCurrency(employee.salary)}</span></td>
+                    <td data-label="Contratación">{formatDate(employee.hireDate)}</td>
+                    <td data-label="Estado"><Badge status={employee.status} /></td>
 
-                    {/* Acciones */}
-                    <td>
-                      <div className={styles.actions}>
-                        {/* Ver detalle */}
-                        <button
-                          className={`${styles.actionBtn} ${styles.actionBtnView}`}
-                          onClick={() => navigate(`/employees/${employee.id}`)}
-                          title="Ver detalle"
-                        >
-                          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                          </svg>
-                        </button>
+                      {/* Acciones */}
+                      <td data-label="Acciones">
+                        <div className={styles.actions}>
+                          {/* Ver detalle */}
+                          <button
+                            className={`${styles.actionBtn} ${styles.actionBtnView}`}
+                            onClick={() => navigate(`/employees/${employee.id}`)}
+                            title="Ver detalle"
+                          >
+                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                          </button>
 
-                        {/* Editar */}
-                        <button
-                          className={`${styles.actionBtn} ${styles.actionBtnEdit}`}
-                          onClick={() => navigate(`/employees/${employee.id}/edit`)}
-                          title="Editar"
-                        >
-                          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                            <path strokeLinecap="round" strokeLinejoin="round"
-                              d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125" />
-                          </svg>
-                        </button>
+                          {/* Editar */}
+                          <button
+                            className={`${styles.actionBtn} ${styles.actionBtnEdit}`}
+                            onClick={() => navigate(`/employees/${employee.id}/edit`)}
+                            title="Editar"
+                          >
+                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                              <path strokeLinecap="round" strokeLinejoin="round"
+                                d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125" />
+                            </svg>
+                          </button>
 
-                        {/* Eliminar */}
-                        <button
-                          className={`${styles.actionBtn} ${styles.actionBtnDelete}`}
-                          onClick={() => openDeleteModal(employee)}
-                          title="Eliminar"
-                        >
-                          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                            <path strokeLinecap="round" strokeLinejoin="round"
-                              d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
-                          </svg>
-                        </button>
-                      </div>
-                    </td>
+                          {/* Eliminar */}
+                          <button
+                            className={`${styles.actionBtn} ${styles.actionBtnDelete}`}
+                            onClick={() => openDeleteModal(employee)}
+                            title="Eliminar"
+                          >
+                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                              <path strokeLinecap="round" strokeLinejoin="round"
+                                d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+                            </svg>
+                          </button>
+                        </div>
+                      </td>
 
                   </tr>
                 ))}

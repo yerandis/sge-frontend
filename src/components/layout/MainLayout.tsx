@@ -1,5 +1,5 @@
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { useState, type JSX } from 'react';
+import { useEffect, useState, type JSX } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../hooks/useTheme';
 import NotificationBell from '../notifications/NotificationBell';
@@ -95,6 +95,14 @@ export default function MainLayout() {
   const { user, logout } = useAuth();
   const { toggleTheme, isDark } = useTheme();
 
+    // ── NUEVO: estado del drawer móvil ──────────────────────────
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  // Cierra el drawer automáticamente al navegar a otra ruta
+  useEffect(() => {
+    setIsSidebarOpen(false);
+  }, [location.pathname]);
+
   const activeModuleId = detectActiveModule(location.pathname);
   const activeModule   = MODULES.find(m => m.id === activeModuleId) ?? MODULES[0];
 
@@ -106,6 +114,15 @@ export default function MainLayout() {
   return (
     <div className={styles.shell}>
 
+      {/* ── OVERLAY (solo visible en móvil cuando el drawer está abierto) ── */}
+      {isSidebarOpen && (
+        <div
+          className={styles.overlay}
+          onClick={() => setIsSidebarOpen(false)}
+          aria-hidden="true"
+        />
+      )}
+
       {/* ── SIDEBAR ───────────────────────────────────────────── */}
       <aside className={styles.sidebar}
         style={{ '--sidebar-accent': activeModule.color } as React.CSSProperties}>
@@ -114,6 +131,17 @@ export default function MainLayout() {
         <div className={styles.sidebarBrand}>
           <div className={styles.brandName}>SGE</div>
           <div className={styles.brandSub}>{activeModule.label}</div>
+
+          {/* Botón cerrar, solo visible en móvil */}
+          <button
+            className={styles.sidebarCloseBtn}
+            onClick={() => setIsSidebarOpen(false)}
+            aria-label="Cerrar menú"
+          >
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
         </div>
 
         {/* Navegación del módulo activo */}
@@ -155,21 +183,33 @@ export default function MainLayout() {
         {/* ── HEADER ──────────────────────────────────────────── */}
         <header className={styles.header}>
 
-          {/* Izquierda: selector de módulos */}
-          <div className={styles.headerModules}>
-            {MODULES.map(mod => (
-              <button
-                key={mod.id}
-                className={`${styles.moduleTab} ${activeModuleId === mod.id ? styles.moduleTabActive : ''}`}
-                style={activeModuleId === mod.id
-                  ? { '--tab-color': mod.color } as React.CSSProperties
-                  : undefined
-                }
-                onClick={() => navigate(mod.defaultPath)}
-              >
-                {mod.label}
-              </button>
-            ))}
+          <div className={styles.headerLeft}>
+            {/* Botón hamburguesa: solo visible en móvil (ver CSS) */}
+            <button
+              className={styles.menuBtn}
+              onClick={() => setIsSidebarOpen(true)}
+              aria-label="Abrir menú"
+            >
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+              </svg>
+            </button>
+            {/* Izquierda: selector de módulos */}
+            <div className={styles.headerModules}>
+              {MODULES.map(mod => (
+                <button
+                  key={mod.id}
+                  className={`${styles.moduleTab} ${activeModuleId === mod.id ? styles.moduleTabActive : ''}`}
+                  style={activeModuleId === mod.id
+                    ? { '--tab-color': mod.color } as React.CSSProperties
+                    : undefined
+                  }
+                  onClick={() => navigate(mod.defaultPath)}
+                >
+                  {mod.label}
+                </button>
+              ))}
+            </div>
           </div>
 
           {/* Derecha: notificaciones, tema, usuario */}

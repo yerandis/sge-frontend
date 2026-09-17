@@ -315,7 +315,7 @@ export default function UsersPage() {
                         </div>
                       </div>
                     </td>
-                    <td>
+                    <td data-label="Roles">
                       <div className={styles.roleTags}>
                         {user.roles.length === 0
                           ? <span className={styles.roleTagEmpty}>Sin roles</span>
@@ -325,17 +325,17 @@ export default function UsersPage() {
                         }
                       </div>
                     </td>
-                    <td>
+                    <td data-label="Estado">
                       <span className={user.active ? styles.statusActive : styles.statusInactive}>
                         <span className={styles.statusDot} />
                         {user.active ? 'Activo' : 'Inactivo'}
                       </span>
                     </td>
-                    <td style={{ color: 'var(--color-text-secondary)', fontSize: '0.8125rem' }}>
+                    <td data-label="Última sesión" style={{ color: 'var(--color-text-secondary)', fontSize: '0.8125rem' }}>
                       {/* formatLastLogin está fuera del componente → no es problema */}
                       {formatLastLogin(user.lastLogin)}
                     </td>
-                    <td>
+                    <td data-label="Acciones">
                       <div className={styles.actions}>
                         <button
                           className={`${styles.actionBtn} ${styles.actionBtnEdit}`}

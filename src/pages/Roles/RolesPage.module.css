@@ -266,3 +266,11 @@
 }
 .btnSave:hover:not(:disabled) { background-color: var(--color-primary-dark); }
 .btnSave:disabled { opacity: 0.6; cursor: not-allowed; }
+
+/*    ---   RESPONSIVE  ---   */
+
+@media (max-width: 380px) {
+  .rolesGrid {   /* usa el nombre real de esa clase */
+    grid-template-columns: 1fr;
+  }
+}

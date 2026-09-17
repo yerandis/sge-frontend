@@ -228,3 +228,66 @@
 }
 .btnSave:hover:not(:disabled) { background-color: var(--color-primary-dark); }
 .btnSave:disabled { opacity: 0.6; cursor: not-allowed; }
+
+/*    ---   RESPONSIVE    ----  */
+
+@media (max-width: 1024px) {
+  .filterPanel { flex-direction: column; align-items: stretch; }
+  .searchWrapper { min-width: 0; width: 100%; }
+  .filterSelect { width: 100%; }
+}
+
+@media (max-width: 640px) {
+  .pageHeader { flex-direction: column; align-items: stretch; }
+  .btnPrimary { justify-content: center; }
+
+  /* La tabla deja de comportarse como tabla... */
+  .tableWrapper { overflow-x: visible; }
+
+  .table thead { display: none; }   /* se ocultan los encabezados */
+
+  .table, .table tbody, .table tr, .table td {
+    display: block;
+    width: 100%;
+  }
+
+  .table tr {
+    border-bottom: 1px solid var(--color-border);
+    padding: 0.875rem 1rem;
+  }
+
+  .table tbody tr:last-child { border-bottom: none; }
+
+  .table td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.375rem 0;
+    border-bottom: none !important;
+    text-align: right;
+  }
+
+  /* ...y cada celda muestra su etiqueta a la izquierda */
+  .table td::before {
+    content: attr(data-label);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--color-text-secondary);
+    text-align: left;
+    flex-shrink: 0;
+  }
+
+  /* La celda de "Empleado"/"Departamento"/"Usuario" con avatar
+     queda mejor alineada a la izquierda sin el patrón etiqueta/valor */
+  .table td:first-child {
+    justify-content: flex-start;
+  }
+  .table td:first-child::before {
+    display: none;
+  }
+
+  .actions { justify-content: flex-end; }
+}

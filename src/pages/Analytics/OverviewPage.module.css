@@ -36,3 +36,14 @@
 .chartBody {
   padding: 1.25rem;
 }
+
+/*    --- RESPONSIVE    ----  */
+
+@media (max-width: 900px) {
+  .chartsGrid { grid-template-columns: 1fr; }
+  .chartCardWide { grid-column: auto; }
+}
+
+@media (max-width: 480px) {
+  .chartBody { padding: 0.875rem; }
+}

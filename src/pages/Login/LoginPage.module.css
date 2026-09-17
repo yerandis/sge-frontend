@@ -132,3 +132,8 @@
 }
 
 .demoHint strong { color: #374151; }
+
+/*  ---  RESPONSIVE  --  */
+@media (max-width: 400px) {
+  .page { padding: 1rem; }   /* usa el nombre real del contenedor raíz */
+}

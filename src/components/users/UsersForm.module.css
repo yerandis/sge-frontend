@@ -264,3 +264,35 @@
   font-size: 0.875rem;
   margin-bottom: 1rem;
 }
+
+/*    --- RESPONSIVE  --- */
+
+@media (max-width: 768px) {
+  .page { max-width: 100%; }
+
+  .pageHeader { margin-bottom: 1.25rem; }
+  .pageTitle  { font-size: 1.125rem; }
+
+  .cardSection { padding: 1.125rem; }
+
+  .formGrid {
+    grid-template-columns: 1fr;   /* una sola columna en móvil */
+    gap: 0.875rem;
+  }
+
+  .formFooter {
+    flex-direction: column-reverse;
+    align-items: stretch;
+    padding: 1rem 1.125rem;
+  }
+
+  .btnCancel,
+  .btnSubmit {
+    justify-content: center;
+    width: 100%;
+  }
+
+  .rolesSelector { 
+    grid-template-columns: 1fr; 
+  }
+}
