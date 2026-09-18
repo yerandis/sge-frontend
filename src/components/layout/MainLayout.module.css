@@ -337,8 +337,8 @@
     box-shadow: var(--shadow-lg);
   }
 
-  .sidebarOpen {
-    transform: translateX(0);
+   .sidebar.sidebarOpen {
+    transform: translateX(0) !important;
   }
 
   .header {

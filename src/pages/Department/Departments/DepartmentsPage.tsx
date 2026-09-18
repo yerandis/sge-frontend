@@ -280,7 +280,7 @@ export default function DepartmentPage() {
                           </button>
 
                           {/* Editar */}
-                          <Can permission="DEPARTMEN_UPDATE">
+                          <Can permission="DEPARTMENT_UPDATE">
                             <button
                               className={`${styles.actionBtn} ${styles.actionBtnEdit}`}
                               onClick={() => navigate(`/departments/${department.id}/edit`)}
