@@ -6,6 +6,7 @@ import {
 import apiClient from '../../services/axiosConfig';
 import Spinner from '../../components/ui/Spinner/Spinner';
 import styles from './OverviewPage.module.css';
+import { getAnalyticsSummary, getEmployeesByDepartment, getHiresByMonth } from '../../services/analytics/analyticsService';
 
 interface DeptData  { name: string; count: number; }
 interface TrendData { month: string; hired: number; }
@@ -20,44 +21,67 @@ export default function OverviewPage() {
   const [isLoading,  setIsLoading]  = useState(true);
 
   useEffect(() => {
+    // async function load() {
+    //   try {
+    //     const [statsRes, deptRes] = await Promise.all([
+    //       apiClient.get('/employees/dashboard/stats'),
+    //       apiClient.get('/analytics/employees-by-department'),
+    //     ]);
+
+    //     const stats = statsRes.data.data;
+    //     setStatusData([
+    //       { name: 'Activos',   value: stats.activeEmployees,   color: '#16a34a' },
+    //       { name: 'Inactivos', value: stats.inactiveEmployees, color: '#94a3b8' },
+    //     ]);
+
+    //     const departments = deptRes.data.data as DepartmentResponse[];
+
+    //     setDeptData(
+    //       departments.map((d) => ({
+    //         name: d.name,
+    //         count: d.count,
+    //       }))
+    //     );
+
+    //     // Datos de tendencia simulados mientras se implementa el endpoint real
+    //     setTrendData([
+    //       { month: 'Ene', hired: 2 }, { month: 'Feb', hired: 1 },
+    //       { month: 'Mar', hired: 3 }, { month: 'Abr', hired: 2 },
+    //       { month: 'May', hired: 4 }, { month: 'Jun', hired: 1 },
+    //       { month: 'Jul', hired: 3 }, { month: 'Ago', hired: 2 },
+    //       { month: 'Sep', hired: 5 }, { month: 'Oct', hired: 2 },
+    //       { month: 'Nov', hired: 1 }, { month: 'Dic', hired: 3 },
+    //     ]);
+    //   } catch (e) {
+    //     console.error(e);
+    //   } finally {
+    //     setIsLoading(false);
+    //   }
+    // }
+    // load();
     async function load() {
       try {
-        const [statsRes, deptRes] = await Promise.all([
-          apiClient.get('/employees/dashboard/stats'),
-          apiClient.get('/analytics/employees-by-department'),
+        const [summary, departments, hires] = await Promise.all([
+          getAnalyticsSummary(),
+          getEmployeesByDepartment(),
+          getHiresByMonth(12),
         ]);
 
-        const stats = statsRes.data.data;
         setStatusData([
-          { name: 'Activos',   value: stats.activeEmployees,   color: '#16a34a' },
-          { name: 'Inactivos', value: stats.inactiveEmployees, color: '#94a3b8' },
+          { name: 'Activos',   value: summary.activeEmployees,   color: '#16a34a' },
+          { name: 'Inactivos', value: summary.inactiveEmployees, color: '#94a3b8' },
         ]);
 
-        const departments = deptRes.data.data as DepartmentResponse[];
+        setDeptData(departments.map(d => ({ name: d.name, count: d.employeeCount })));
 
-        setDeptData(
-          departments.map((d) => ({
-            name: d.name,
-            count: d.count,
-          }))
-        );
-
-        // Datos de tendencia simulados mientras se implementa el endpoint real
-        setTrendData([
-          { month: 'Ene', hired: 2 }, { month: 'Feb', hired: 1 },
-          { month: 'Mar', hired: 3 }, { month: 'Abr', hired: 2 },
-          { month: 'May', hired: 4 }, { month: 'Jun', hired: 1 },
-          { month: 'Jul', hired: 3 }, { month: 'Ago', hired: 2 },
-          { month: 'Sep', hired: 5 }, { month: 'Oct', hired: 2 },
-          { month: 'Nov', hired: 1 }, { month: 'Dic', hired: 3 },
-        ]);
+        setTrendData(hires.map(h => ({ month: h.month, hired: h.hires })));
       } catch (e) {
         console.error(e);
       } finally {
         setIsLoading(false);
       }
-    }
-    load();
+  }
+  load();
   }, []);
 
   if (isLoading) return <Spinner message="Cargando analítica..." />;

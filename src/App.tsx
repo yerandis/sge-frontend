@@ -22,6 +22,9 @@ import UserNewPage from './pages/Users/UserNew/UserNewPage';
 import UserDetailPage from './pages/Users/UserDetail/UserDetailPage';
 import UserEditPage from './pages/Users/UserEdit/UserEditPage';
 import PermissionRoute from './components/auth/PermissionRoute';
+import DepartmentsAnalyticsPage from './pages/Analytics/Department/DepartmentsAnalyticsPage';
+import EmployeesAnalyticsPage from './pages/Analytics/Employee/EmployeesAnalyticsPage';
+
 
 export default function App() {
   return (
@@ -81,11 +84,14 @@ export default function App() {
             <Route element={<PermissionRoute permission="USER_UPDATE" />}>
               <Route path="/users/:id/edit" element={<UserEditPage/>}/>
             </Route>
-            {/* ANALITIC MODULE  */}
-             <Route path="/analytics/overview"     element={<OverviewPage />} />
-             <Route path="/analytics/employees"    element={<div>Análisis de empleados — próximamente</div>} />
-             <Route path="/analytics/departments"  element={<div>Análisis de departamentos — próximamente</div>} />
+            
+          {/* ANALITIC MODULE  */}
+             <Route path="/analytics/overview" element={<OverviewPage />} />
 
+            <Route element={<PermissionRoute permission="REPORT_VIEW" />}>
+              <Route path="/analytics/employees"   element={<EmployeesAnalyticsPage />} />
+              <Route path="/analytics/departments" element={<DepartmentsAnalyticsPage />} />
+            </Route>
             {/* </Route> */}
           </Route>
         </Route>
